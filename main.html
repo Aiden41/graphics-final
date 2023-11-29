@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<meta charset="utf-8" name="viewport" content="width=device-width">
+<style >
+    #container{position: relative;}
+    #innerContainer{position: absolute; visibility: hidden;}
+    #buttonContainer{position: relative; top: 725px; left: 1183px;}
+    #instructionContainer{position: relative; top: 700px;}
+    #the-canvas {border:1px solid black; position: absolute;}
+    #the-canvas2 {border:1px solid black; position: absolute;}
+    #reset-button{ height: 50px; width: 50px;}
+    #submit-button{ height: 50px; width: 50px;}
+</style>
+<html lang="en">
+    <link>
+        <title>My Final Project</title>
+        <link rel="icon" href="data:,">
+        <script src="scripts/lib.js"></script>
+        <script src="scripts/node.js"></script>
+        <script src="scripts/matrix.js"></script>
+        <script src="scripts/vector.js"></script>
+        <script src="scripts/mesh.js"></script>
+        <script src="scripts/material.js"></script>
+        <script src="scripts/light.js"></script>
+    </head>
+    <body>
+        <div id="container">
+            <canvas id= "the-canvas" width= "1280" height= "720"></canvas>
+            <div id="innerContainer">
+                <canvas id= "the-canvas2" width="1280" height="720"></canvas>
+                <div id="buttonContainer">
+                    <input type="image" src="src/icons/reset.png" onclick="myClear()" id="reset-button" title="Reset"></input>
+                    <input type="image" src="src/icons/check.png" onclick="take_and_send_screenshot()" id="submit-button" title="Submit"></input>
+                </div>
+            </div>
+        </div>
+        <script src="scripts/main.js"></script>
+    </body>
+</html>
