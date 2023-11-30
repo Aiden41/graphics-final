@@ -334,11 +334,11 @@ function update() {
     let basis_z = view.basis_z();
     if(keys.is_key_down('ArrowUp'))
     {
-        pitch -= rotation_speed;
+        pitch += rotation_speed;
     }
     if(keys.is_key_down('ArrowDown'))
     {
-        pitch += rotation_speed;
+        pitch -= rotation_speed;
     }
     if(keys.is_key_down('ArrowLeft'))
     {
