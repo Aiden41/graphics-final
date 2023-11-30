@@ -160,29 +160,46 @@ let pitch = 0;
 let roll = 0;
 
 let scene = new Node();
+
+//spheres
 let sphere1 = scene.add_child();
 sphere1.data = metal_sphere_mesh;
 sphere1.scale = new Vec4(2,2,2);
 sphere1.position = new Vec4(0,0,0);
+
 let sphere2 = sphere1.add_child();
 sphere2.position = new Vec4(1,0,0);
 sphere2.data = brick_sphere_mesh;
+
 let sphere3 = sphere1.add_child();
 sphere3.position = new Vec4(-1,0,0);
 sphere3.scale = new Vec4(0.5, 0.5, 0.5);
 sphere3.data = metal_sphere_mesh;
-let sphere4 = sphere3.add_child();
-sphere4.position = new Vec4(0,3,-1);
-sphere4.scale = new Vec4(0.75, 0.75, 0.75);
-sphere4.data = xor_sphere_mesh;
-let sun1 = sphere1.add_child();
-sun1.data = new Light([0.0, 0.0, 0.0], [1.0, 1.0, 1.0], 1);
+
+//lights
 let point1 = scene.add_child();
-point1.data = new Light([-2.5, -4.0, -0.5], [1.0, 0.0, 0.0], 1);
-let point2 = sphere4.add_child();
-point2.data = new Light([-5.5, 4.0, -0.5], [0.0, 0.0, 1.0], 0);
-let box1 = scene.add_child();
-box1.data = Mesh.inverse_box(gl, shader_program, 10, 7, 10, brick_wall);
+point1.data = new Light([-2.5, -2.0, -0.5], [1.0, 0.0, 0.0], 1);
+
+let point2 = scene.add_child();
+point2.data = new Light([5.0, -2.0, 0.0], [0.0, 0.0, 1.0], 1);
+
+//boxes
+// let box1 = scene.add_child();
+// box1.data = Mesh.inverse_options_box(gl, shader_program, 10, 7, 10, brick_wall, [1,1,0,1,0,1]);
+// box1.position = new Vec4(5,0,0);
+
+// let box2 = scene.add_child();
+// box2.data = Mesh.inverse_options_box(gl, shader_program, 10, 7, 10, brick_wall, [1,0,0,1,1,1]);
+// box2.position = new Vec4(-5,0,0);
+
+//walls
+let wall1 = scene.add_child();
+wall1.data = Mesh.wall(gl,shader_program,10,7,brick_wall);
+wall1.position = new Vec4(-5,0,1);
+
+let wall2 = scene.add_child();
+wall2.data = Mesh.wall(gl,shader_program,10,7,brick_wall);
+wall2.position = new Vec4(5,0,1);
 
 gl.viewport( 0, 0, 1280, 720 );
 

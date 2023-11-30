@@ -18,7 +18,39 @@ class Mesh {
         this.n_indis = indices.length;
         this.program = program;
         this.material = material;
-    }
+    };
+
+    /**
+     * Create a box mesh with the given dimensions and colors.
+     * @param {WebGLRenderingContext} gl 
+     * @param {number} width 
+     * @param {number} height
+     */
+    static wall( gl, program, width, height, material ) {
+        let hwidth = width / 2.0;
+        let hheight = height / 2.0;
+        let norm = new Vec4(hwidth,hheight,0,0).norm();
+
+        let verts = [
+            -hwidth, hheight, 0,       0.0, 0.0, 1.0, 1.0, 0, 0, norm.x, norm.y, 0, // front face
+            -hwidth, -hheight, 0,      0.0, 1.0, 0.0, 1.0, 0, 1, norm.x, norm.y, 0,
+            hwidth, -hheight, 0,       1.0, 0.0, 0.0, 1.0, 1, 1, norm.x, norm.y, 0,
+            hwidth, hheight, 0,        1.0, 1.0, 0.0, 1.0, 1, 0, norm.x, norm.y, 0,
+        
+            hwidth, hheight, 0,        1.0, 1.0, 0.5, 1.0, 0, 0, norm.x, norm.y, 0,// back face
+            hwidth, -hheight, 0,       1.0, 0.0, 1.0, 1.0, 0, 1, norm.x, norm.y, 0,
+            -hwidth, -hheight, 0,      0.0, 1.0, 1.0, 1.0, 1, 1, norm.x, norm.y, 0,
+            -hwidth, hheight, 0,       0.5, 0.5, 1.0, 1.0, 1, 0, norm.x, norm.y, 0
+        ];
+
+        let indis = [
+            // clockwise winding
+            0, 3, 2, 2, 1, 0,
+            4, 7, 6, 6, 5, 4
+        ];
+
+        return new Mesh( gl, program, verts, indis, material);
+    };
 
     /**
      * Create a box mesh with the given dimensions and colors.
@@ -28,44 +60,129 @@ class Mesh {
      * @param {number} depth 
      */
 
-    static inverse_box( gl, program, width, height, depth, material ) {
+        static box( gl, program, width, height, depth, material, winding ) {
+            let hwidth = width / 2.0;
+            let hheight = height / 2.0;
+            let hdepth = depth / 2.0;
+            let norm = new Vec4(hwidth,hheight,hdepth,0).norm();
+    
+            let verts = [
+                -hwidth, hheight, -hdepth,      0.0, 0.0, 1.0, 1.0, 0, 0.25, norm.x, norm.y, norm.z, // front face
+                -hwidth, -hheight, -hdepth,     0.0, 1.0, 0.0, 1.0, 0, 0.5, norm.x, norm.y, norm.z,
+                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.25, 0.5, norm.x, norm.y, norm.z,
+                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.25, 0.25, norm.x, norm.y, norm.z,
+    
+                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.25, 0.25, norm.x, norm.y, norm.z, // right face
+                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.25, 0.5, norm.x, norm.y, norm.z,
+                hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, -norm.y, norm.z,
+                hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0.25, norm.x, norm.y, norm.z,
+    
+                hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0.25, norm.x, norm.y, norm.z,// back face
+                hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, norm.y, norm.z,
+                -hwidth, -hheight, hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, norm.x, norm.y, norm.z,
+                -hwidth, hheight, hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0.25, norm.x, norm.y, norm.z,
+    
+                -hwidth, hheight, hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0, norm.x, norm.y, norm.z,// top face
+                -hwidth, hheight, -hdepth,      0.0, 0.0, 1.0, 1.0, 0.75, 0.25, norm.x, norm.y, norm.z,
+                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.5, 0.25, norm.x, norm.y, norm.z,
+                hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0, norm.x, norm.y, norm.z,
+    
+                -hwidth, hheight, hdepth,       0.0, 0.0, 1.0, 1.0, 1, 0.25, norm.x, norm.y, norm.z,// left face
+                -hwidth, -hheight, hdepth,      0.0, 1.0, 0.0, 1.0, 1, 0.5, norm.x, norm.y, norm.z,
+                -hwidth, -hheight, -hdepth,     0.0, 1.0, 1.0, 1.0, 0.75, 0.5, norm.x, norm.y, norm.z,
+                -hwidth, hheight, -hdepth,      0.5, 0.5, 1.0, 1.0, 0.75, 0.25, norm.x, norm.y, norm.z,
+    
+                -hwidth, -hheight, -hdepth,     0.0, 1.0, 0.0, 1.0, 0.75, 0.75, norm.x, norm.y, norm.z,// bottom face
+                -hwidth, -hheight, hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, norm.x, norm.y, norm.z,
+                hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, norm.y, norm.z,
+                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.5, 0.75, norm.x, norm.y, norm.z
+            ];
+    
+            if(winding == 0){
+                let indis = [
+                    // counter-clockwise winding
+                    0, 1, 2, 2, 3, 0,
+                    4, 5, 6, 6, 7, 4,
+                    8, 9, 10, 10, 11, 8,
+                    12, 13, 14, 14, 15, 12,
+                    16, 17, 18, 18, 19, 16,
+                    20, 21, 22, 22, 23, 20
+                ];
+            }
+            else{
+                let indis = [
+                    // clockwise winding
+                    0, 3, 2, 2, 1, 0,
+                    4, 7, 6, 6, 5, 4,
+                    8, 11, 10, 10, 9, 8,
+                    12, 15, 14, 14, 13, 12,
+                    16, 19, 18, 18, 17, 16,
+                    20, 23, 22, 22, 21, 20
+                ];
+            };
+    
+            return new Mesh( gl, program, verts, indis, material);
+        };
+
+    /**
+     * Create a box mesh with the given dimensions and colors.
+     * @param {WebGLRenderingContext} gl 
+     * @param {number} width 
+     * @param {number} height 
+     * @param {number} depth 
+     */
+
+    static inverse_options_box( gl, program, width, height, depth, material, options ) {
         let hwidth = width / 2.0;
         let hheight = height / 2.0;
         let hdepth = depth / 2.0;
-        let norm = new Vec4(-hwidth,hheight,-hdepth,0).norm();
+        let norm = new Vec4(hwidth,hheight,hdepth,0).norm();
+        let verts = [];
 
-        let verts = [
-            -hwidth, hheight, -hdepth,      0.0, 0.0, 1.0, 1.0, 0, 0.25, -norm.x, norm.y, -norm.z, // front face
-            -hwidth, -hheight, -hdepth,     0.0, 1.0, 0.0, 1.0, 0, 0.5, -norm.x, -norm.y, -norm.z,
-            hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.25, 0.5, norm.x, -norm.y, -norm.z,
-            hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.25, 0.25, norm.x, norm.y, -norm.z,
+        if(options.length != 6){ throw new console.error("options must be of length 6.");}
 
-            hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.25, 0.25, norm.x, norm.y, -norm.z, // right face
-            hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.25, 0.5, norm.x, -norm.y, -norm.z,
-            hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, -norm.y, norm.z,
-            hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0.25, norm.x, norm.y, norm.z,
-
-            // hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0.25, norm.x, norm.y, norm.z,// back face
-            // hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, -norm.y, norm.z,
-            // -hwidth, -hheight, hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, -norm.x, -norm.y, norm.z,
-            // -hwidth, hheight, hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0.25, -norm.x, norm.y, norm.z,
-
-            -hwidth, hheight, hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0, -norm.x, norm.y, norm.z,// top face
-            -hwidth, hheight, -hdepth,      0.0, 0.0, 1.0, 1.0, 0.75, 0.25, -norm.x, norm.y, -norm.z,
-            hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.5, 0.25, norm.x, norm.y, -norm.z,
-            hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0, norm.x, norm.y, norm.z,
-
-            -hwidth, hheight, hdepth,      0.0, 0.0, 1.0, 1.0, 1, 0.25, -norm.x, norm.y, norm.z,// left face
-            -hwidth, -hheight, hdepth,     0.0, 1.0, 0.0, 1.0, 1, 0.5, -norm.x, -norm.y, norm.z,
-            -hwidth, -hheight, -hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, -norm.x, -norm.y, -norm.z,
-            -hwidth, hheight, -hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0.25, -norm.x, norm.y, -norm.z,
-
-            -hwidth, -hheight, -hdepth,     0.0, 1.0, 0.0, 1.0, 0.75, 0.75, -norm.x, -norm.y, -norm.z,// bottom face
-            -hwidth, -hheight, hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, -norm.x, -norm.y, norm.z,
-            hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, -norm.y, norm.z,
-            hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.5, 0.75, norm.x, -norm.y, -norm.z
-            
-        ];
+        if(options[0]===1){// front face
+            verts.push(
+                -hwidth, hheight, -hdepth,      0.0, 0.0, 1.0, 1.0, 0, 0.25, norm.x, norm.y, norm.z, 
+                -hwidth, -hheight, -hdepth,     0.0, 1.0, 0.0, 1.0, 0, 0.5, norm.x, norm.y, norm.z,
+                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.25, 0.5, norm.x, norm.y, norm.z,
+                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.25, 0.25, norm.x, norm.y, norm.z);
+        }
+        if(options[1]===1){// right face
+            verts.push(
+                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.25, 0.25, norm.x, norm.y, norm.z, 
+                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.25, 0.5, norm.x, norm.y, norm.z,
+                hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, norm.y, norm.z,
+                hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0.25, norm.x, norm.y, norm.z);
+        }
+        if(options[2]===1){// back face
+            verts.push(
+                hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0.25, norm.x, norm.y, norm.z,
+                hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, norm.y, norm.z,
+                -hwidth, -hheight, hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, norm.x, norm.y, norm.z,
+                -hwidth, hheight, hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0.25, norm.x, norm.y, norm.z);
+        }
+        if(options[3]===1){// top face
+            verts.push(
+                -hwidth, hheight, hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0, norm.x, norm.y, norm.z,
+                -hwidth, hheight, -hdepth,      0.0, 0.0, 1.0, 1.0, 0.75, 0.25, norm.x, norm.y, norm.z,
+                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.5, 0.25, norm.x, norm.y, norm.z,
+                hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0, norm.x, norm.y, norm.z);
+        }
+        if(options[4]===1){// left face
+            verts.push(
+                -hwidth, hheight, hdepth,       0.0, 0.0, 1.0, 1.0, 1, 0.25, norm.x, norm.y, norm.z,
+                -hwidth, -hheight, hdepth,      0.0, 1.0, 0.0, 1.0, 1, 0.5, norm.x, norm.y, norm.z,
+                -hwidth, -hheight, -hdepth,     0.0, 1.0, 1.0, 1.0, 0.75, 0.5, norm.x, norm.y, norm.z,
+                -hwidth, hheight, -hdepth,      0.5, 0.5, 1.0, 1.0, 0.75, 0.25, norm.x, norm.y, norm.z);
+        }
+        if(options[5]===1){// bottom face
+            verts.push(
+                -hwidth, -hheight, -hdepth,     0.0, 1.0, 0.0, 1.0, 0.75, 0.75, norm.x, norm.y, norm.z,
+                -hwidth, -hheight, hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, norm.x, norm.y, norm.z,
+                hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, norm.y, norm.z,
+                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.5, 0.75, norm.x, norm.y, norm.z);
+        }
 
         let indis = [
             // clockwise winding
@@ -75,87 +192,10 @@ class Mesh {
             12, 15, 14, 14, 13, 12,
             16, 19, 18, 18, 17, 16,
             20, 23, 22, 22, 21, 20
-
-            // counter-clockwise winding
-            // 0, 1, 2, 2, 3, 0,
-            // 4, 5, 6, 6, 7, 4,
-            // 8, 9, 10, 10, 11, 8,
-            // 12, 13, 14, 14, 15, 12,
-            // 16, 17, 18, 18, 19, 16,
-            // 20, 21, 22, 22, 23, 20
         ];
 
         return new Mesh( gl, program, verts, indis, material);
     }
-
-    /**
-     * Create a box mesh with the given dimensions and colors.
-     * @param {WebGLRenderingContext} gl 
-     * @param {number} width 
-     * @param {number} height 
-     * @param {number} depth 
-     */
-
-    static box( gl, program, width, height, depth, material ) {
-        let hwidth = width / 2.0;
-        let hheight = height / 2.0;
-        let hdepth = depth / 2.0;
-        let norm = new Vec4(-hwidth,hheight,-hdepth,0).norm();
-
-        let verts = [
-            -hwidth, hheight, -hdepth,      0.0, 0.0, 1.0, 1.0, 0, 0.25, -norm.x, norm.y, -norm.z, // front face
-            -hwidth, -hheight, -hdepth,     0.0, 1.0, 0.0, 1.0, 0, 0.5, -norm.x, -norm.y, -norm.z,
-            hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.25, 0.5, norm.x, -norm.y, -norm.z,
-            hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.25, 0.25, norm.x, norm.y, -norm.z,
-
-            hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.25, 0.25, norm.x, norm.y, -norm.z, // right face
-            hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.25, 0.5, norm.x, -norm.y, -norm.z,
-            hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, -norm.y, norm.z,
-            hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0.25, norm.x, norm.y, norm.z,
-
-            hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0.25, norm.x, norm.y, norm.z,// back face
-            hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, -norm.y, norm.z,
-            -hwidth, -hheight, hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, -norm.x, -norm.y, norm.z,
-            -hwidth, hheight, hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0.25, -norm.x, norm.y, norm.z,
-
-            -hwidth, hheight, hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0, -norm.x, norm.y, norm.z,// top face
-            -hwidth, hheight, -hdepth,      0.0, 0.0, 1.0, 1.0, 0.75, 0.25, -norm.x, norm.y, -norm.z,
-            hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.5, 0.25, norm.x, norm.y, -norm.z,
-            hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0, norm.x, norm.y, norm.z,
-
-            -hwidth, hheight, hdepth,      0.0, 0.0, 1.0, 1.0, 1, 0.25, -norm.x, norm.y, norm.z,// left face
-            -hwidth, -hheight, hdepth,     0.0, 1.0, 0.0, 1.0, 1, 0.5, -norm.x, -norm.y, norm.z,
-            -hwidth, -hheight, -hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, -norm.x, -norm.y, -norm.z,
-            -hwidth, hheight, -hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0.25, -norm.x, norm.y, -norm.z,
-
-            -hwidth, -hheight, -hdepth,     0.0, 1.0, 0.0, 1.0, 0.75, 0.75, -norm.x, -norm.y, -norm.z,// bottom face
-            -hwidth, -hheight, hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, -norm.x, -norm.y, norm.z,
-            hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, -norm.y, norm.z,
-            hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.5, 0.75, norm.x, -norm.y, -norm.z
-            
-        ];
-
-        let indis = [
-            // clockwise winding
-            // 0, 3, 2, 2, 1, 0,
-            // 4, 7, 6, 6, 5, 4,
-            // 8, 11, 10, 10, 9, 8,
-            // 12, 15, 14, 14, 13, 12,
-            // 16, 19, 18, 18, 17, 16,
-            // 20, 23, 22, 22, 21, 20
-
-            // counter-clockwise winding
-            0, 1, 2, 2, 3, 0,
-            4, 5, 6, 6, 7, 4,
-            8, 9, 10, 10, 11, 8,
-            12, 13, 14, 14, 15, 12,
-            16, 17, 18, 18, 19, 16,
-            20, 21, 22, 22, 23, 20
-        ];
-
-        return new Mesh( gl, program, verts, indis, material);
-    }
-
 
     /**
      * Render the mesh. Does NOT preserve array/index buffer or program bindings! 
