@@ -15,6 +15,9 @@ let vertex_source =
     `#version 300 es
     precision mediump float;
 
+    layout (location = 0) in vec3 aPos;
+    out vec3 TexCoords;
+
     uniform mat4 modelview;
     uniform mat4 persp;
     in vec2 uv;
@@ -29,17 +32,23 @@ let vertex_source =
     out vec3 v_coordinates;
 
     void main(void){
-        gl_Position = persp * modelview * vec4(coordinates,1.0);
+
+        TexCoords = aPos;
+        gl_Position = persp * modelview * (vec4(coordinates,1.0) + vec4(aPos, 1.0));
         v_color = color;
         v_uv = uv;
         v_normals = normals;
         v_coordinates = coordinates;
         v_model = modelview;
+
     }`;
 
 let fragment_source = 
     `#version 300 es
     precision mediump float;
+
+    in vec3 TexCoords;
+    uniform samplerCube skybox;
 
     in vec2 v_uv;
     in vec4 v_color;
@@ -78,6 +87,7 @@ let fragment_source =
     }
 
     void main(void){
+
         vec3 normal_tx = normalize( mat3( model ) * v_normals );
         vec3 coords_tx = ( model * vec4(v_coordinates, 1.0) ).xyz;
         vec3 camera_dir = normalize(camera_pos - coords_tx); 
@@ -107,7 +117,7 @@ let fragment_source =
             }
         }
 
-        f_color = f_color * texture( tex_0, v_uv );
+        f_color = f_color * texture( tex_0, v_uv ) * texture(skybox, TexCoords);
     }`;
 
 let vert_shader = gl.createShader(gl.VERTEX_SHADER);
@@ -160,6 +170,20 @@ let yaw = 0;
 let pitch = 0;
 let roll = 0;
 
+//cubemap
+
+let cubemapTexture = loadCubemap(gl, ["src/textures/minecraftBackground.jpg",
+                                    "src/textures/minecraftBackground.jpg",
+                                    "src/textures/minecraftBackground.jpg",
+                                    "src/textures/minecraftBackground.jpg",
+                                    "src/textures/minecraftBackground.jpg",
+                                    "src/textures/minecraftBackground.jpg"
+                                ])
+
+//skyboxShader.use();
+
+
+
 let scene = new Node();
 
 //spheres
@@ -201,6 +225,8 @@ wall1.position = new Vec4(-5,0,1);
 let wall2 = scene.add_child();
 wall2.data = Mesh.wall(gl,shader_program,10,7,brick_wall);
 wall2.position = new Vec4(5,0,1);
+
+
 
 
 let loading_mesh = null;

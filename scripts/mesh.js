@@ -249,6 +249,66 @@ class Mesh {
             this.verts, 3,
             gl.FLOAT, false, VERTEX_STRIDE, 36
         );
+        
+        let cubemapTexture = loadCubemap(gl, ["src/textures/minecraftBackground.jpg",
+                                    "src/textures/minecraftBackground.jpg",
+                                    "src/textures/minecraftBackground.jpg",
+                                    "src/textures/minecraftBackground.jpg",
+                                    "src/textures/minecraftBackground.jpg",
+                                    "src/textures/minecraftBackground.jpg"
+                                ]);
+
+        //gl.bindTexture(gl.TEXTURE_CUBE_MAP, cubemapTexture);
+        let skyboxVAO = [
+            // positions          
+            -1.0,  1.0 , -1.0 ,
+            -1.0, -1.0 , -1.0 ,
+             1.0, -1.0 , -1.0 ,
+             1.0 , -1.0 , -1.0 ,
+             1.0 ,  1.0 , -1.0 ,
+            -1.0 ,  1.0 , -1.0 ,
+        
+            -1.0 , -1.0,  1.0,
+            -1.0, -1.0, -1.0,
+            -1.0,  1.0, -1.0,
+            -1.0,  1.0, -1.0,
+            -1.0,  1.0,  1.0,
+            -1.0, -1.0,  1.0,
+        
+             1.0, -1.0, -1.0,
+             1.0, -1.0,  1.0,
+             1.0,  1.0,  1.0,
+             1.0,  1.0,  1.0,
+             1.0,  1.0, -1.0,
+             1.0, -1.0, -1.0,
+        
+            -1.0, -1.0,  1.0,
+            -1.0,  1.0,  1.0,
+             1.0,  1.0,  1.0,
+             1.0,  1.0,  1.0,
+             1.0, -1.0,  1.0,
+            -1.0, -1.0,  1.0,
+        
+            -1.0,  1.0, -1.0,
+             1.0,  1.0, -1.0,
+             1.0,  1.0,  1.0,
+             1.0,  1.0,  1.0,
+            -1.0,  1.0,  1.0,
+            -1.0,  1.0, -1.0,
+        
+            -1.0, -1.0, -1.0,
+            -1.0, -1.0,  1.0,
+             1.0, -1.0, -1.0,
+             1.0, -1.0, -1.0,
+            -1.0, -1.0,  1.0,
+             1.0, -1.0,  1.0
+        ];
+        skyboxVAO = create_and_load_vertex_buffer( gl, skyboxVAO, gl.STATIC_DRAW );
+        gl.depthMask(false);
+        //gl.bindBuffer(gl.ARRAY_BUFFER, skyboxVAO);
+        //gl.bindTexture(gl.TEXTURE_CUBE_MAP, cubemapTexture);
+        //gl.drawArrays(gl.TRIANGLES, 0, 36);
+        gl.depthMask(true);
 
         gl.bindTexture( gl.TEXTURE_2D, this.material.texture );
         set_uniform_scalar( gl, this.program, 'mat_ambient', this.material.ambient );
