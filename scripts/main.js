@@ -8,7 +8,6 @@ let gl=canvas.getContext('webgl2', glContextAttributes);
 
 gl.clearColor(0.9,0.9,1.0,1.0);
 gl.enable( gl.DEPTH_TEST );
-gl.cullFace( gl.BACK );
 gl.enable( gl.CULL_FACE );
 gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
 
@@ -203,6 +202,22 @@ let wall2 = scene.add_child();
 wall2.data = Mesh.wall(gl,shader_program,10,7,brick_wall);
 wall2.position = new Vec4(5,0,1);
 
+
+let loading_mesh = null;
+let java = scene.add_child();
+java.pitch = 0.25;
+java.position = new Vec4(5,0,-1);
+java.scale = new Vec4(1,1,1);
+loadTheMesh('/src/models/java.obj', 1, function(){
+    java.data = loading_mesh;
+});
+
+let cow = scene.add_child();
+cow.position = new Vec4(-5, 0, -1);
+loadTheMesh('/src/models/cow.obj', 1, function(){
+    cow.data = loading_mesh;
+});
+
 gl.viewport( 0, 0, 1280, 720 );
 
 function render(){
@@ -212,6 +227,7 @@ function render(){
     generate_render_jobs(new Mat4, scene, jobs, lights);
     let light_positions = [];
     let light_colors = [];
+
     for(let light of lights){
         light_positions.push(light.location[0],light.location[1],light.location[2],light.type);
         light_colors.push(light.color[0], light.color[1], light.color[2]);
@@ -276,6 +292,14 @@ function loadTexture(src){
     };
     tex.image.src = src;
     return tex;
+};
+
+function loadTheMesh(src, winding, _callback){
+    Mesh.from_obj_file(gl, src, shader_program, loadMesh, metal_scale, winding, _callback);
+}
+
+function loadMesh( load ){
+    loading_mesh = load;
 };
 
 function on_load(){

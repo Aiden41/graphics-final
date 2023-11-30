@@ -10,7 +10,7 @@ class Mesh {
      * @param {number[]} indices
      * @param {material} material
     */
-    constructor( gl, program, vertices, indices, material ) {
+    constructor( gl, program, vertices, indices, material) {
         this.verts = create_and_load_vertex_buffer( gl, vertices, gl.STATIC_DRAW );
         this.indis = create_and_load_elements_buffer( gl, indices, gl.STATIC_DRAW );
 
@@ -18,6 +18,20 @@ class Mesh {
         this.n_indis = indices.length;
         this.program = program;
         this.material = material;
+    };
+
+    /**
+     * Create a box mesh with the given dimensions and colors.
+     * @param {WebGLRenderingContext} gl 
+     */
+
+    static empty( gl, program, material) {
+
+        let verts = [];
+        
+        let indis = [];
+
+        return new Mesh( gl, program, verts, indis, material);
     };
 
     /**
@@ -252,7 +266,7 @@ class Mesh {
      * @param {WebGLProgram} program
      * @param {string} text
      */
-    static from_obj_text( gl, program, text, material ) {
+    static from_obj_text( gl, program, text, material, winding ) {
         let verts = [];
         let indis = [];
 
@@ -263,18 +277,23 @@ class Mesh {
             let line = lines[index].trim();
             let parts_of_line = line.split( /(\s+)/ );
 
-            if(parts_of_line[0] === 'v')
+            if(parts_of_line[0] === 'v' && parts_of_line[1] !== 'n')
             {
                 verts.push(parts_of_line[2], parts_of_line[4], parts_of_line[6]); // vertices
-                verts.push(0.53+color_change, 0.8+color_change, 0.67+color_change, 1); // colors
-                color_change+=0.000045
+                verts.push(0.0, 0.0, 0.0, 1, 0, 0.5); // colors
                 let norm = new Vec4(parts_of_line[2],parts_of_line[4],parts_of_line[6],0).norm();
                 verts.push(norm.x, norm.y, norm.z);
             }
 
             if(parts_of_line[0] === 'f')
             {
-                indis.push(parts_of_line[2]-1, parts_of_line[4]-1, parts_of_line[6]-1); // indices
+                if(winding == 0){
+                    indis.push(parts_of_line[2]-1, parts_of_line[4]-1, parts_of_line[6]-1); // indices
+                }
+                else{
+                    indis.push(parts_of_line[6]-1, parts_of_line[4]-1, parts_of_line[2]-1); // indices
+                }
+                
             }
         }
         
@@ -288,7 +307,7 @@ class Mesh {
      * @param {WebGLProgram} program
      * @param {function} f the function to call and give mesh to when finished.
      */
-    static from_obj_file( gl, file_name, program, f, material) {
+    static from_obj_file( gl, file_name, program, f, material, winding, _callback) {
         let request = new XMLHttpRequest();
         
         // the function that will be called when the file is being loaded
@@ -301,10 +320,11 @@ class Mesh {
             }
 
             // now we know the file exists and is ready
-            let loaded_mesh = Mesh.from_obj_text( gl, program, request.responseText, material );
+            let loaded_mesh = Mesh.from_obj_text( gl, program, request.responseText, material, winding);
 
             console.log( 'loaded ', file_name );
             f( loaded_mesh );
+            _callback();
         };
 
         
