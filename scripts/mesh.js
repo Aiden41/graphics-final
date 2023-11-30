@@ -67,39 +67,41 @@ class Mesh {
             let norm = new Vec4(hwidth,hheight,hdepth,0).norm();
     
             let verts = [
-                -hwidth, hheight, -hdepth,      0.0, 0.0, 1.0, 1.0, 0, 0.25, norm.x, norm.y, norm.z, // front face
-                -hwidth, -hheight, -hdepth,     0.0, 1.0, 0.0, 1.0, 0, 0.5, norm.x, norm.y, norm.z,
-                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.25, 0.5, norm.x, norm.y, norm.z,
-                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.25, 0.25, norm.x, norm.y, norm.z,
+                -hwidth, hheight, -hdepth,      0.0, 0.0, 1.0, 1.0, 0, 0.25, -norm.x, norm.y, -norm.z, // front face
+                -hwidth, -hheight, -hdepth,     0.0, 1.0, 0.0, 1.0, 0, 0.5, -norm.x, -norm.y, -norm.z,
+                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.25, 0.5, norm.x, -norm.y, -norm.z,
+                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.25, 0.25, norm.x, norm.y, -norm.z,
     
-                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.25, 0.25, norm.x, norm.y, norm.z, // right face
-                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.25, 0.5, norm.x, norm.y, norm.z,
+                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.25, 0.25, norm.x, norm.y, -norm.z, // right face
+                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.25, 0.5, norm.x, -norm.y, -norm.z,
                 hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, -norm.y, norm.z,
                 hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0.25, norm.x, norm.y, norm.z,
     
                 hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0.25, norm.x, norm.y, norm.z,// back face
-                hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, norm.y, norm.z,
-                -hwidth, -hheight, hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, norm.x, norm.y, norm.z,
-                -hwidth, hheight, hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0.25, norm.x, norm.y, norm.z,
+                hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, -norm.y, norm.z,
+                -hwidth, -hheight, hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, -norm.x, -norm.y, norm.z,
+                -hwidth, hheight, hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0.25, -norm.x, norm.y, norm.z,
     
-                -hwidth, hheight, hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0, norm.x, norm.y, norm.z,// top face
-                -hwidth, hheight, -hdepth,      0.0, 0.0, 1.0, 1.0, 0.75, 0.25, norm.x, norm.y, norm.z,
-                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.5, 0.25, norm.x, norm.y, norm.z,
+                -hwidth, hheight, hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0, -norm.x, norm.y, norm.z,// top face
+                -hwidth, hheight, -hdepth,      0.0, 0.0, 1.0, 1.0, 0.75, 0.25, -norm.x, norm.y, -norm.z,
+                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.5, 0.25, norm.x, norm.y, -norm.z,
                 hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0, norm.x, norm.y, norm.z,
     
-                -hwidth, hheight, hdepth,       0.0, 0.0, 1.0, 1.0, 1, 0.25, norm.x, norm.y, norm.z,// left face
-                -hwidth, -hheight, hdepth,      0.0, 1.0, 0.0, 1.0, 1, 0.5, norm.x, norm.y, norm.z,
-                -hwidth, -hheight, -hdepth,     0.0, 1.0, 1.0, 1.0, 0.75, 0.5, norm.x, norm.y, norm.z,
-                -hwidth, hheight, -hdepth,      0.5, 0.5, 1.0, 1.0, 0.75, 0.25, norm.x, norm.y, norm.z,
+                -hwidth, hheight, hdepth,       0.0, 0.0, 1.0, 1.0, 1, 0.25, -norm.x, norm.y, norm.z,// left face
+                -hwidth, -hheight, hdepth,      0.0, 1.0, 0.0, 1.0, 1, 0.5, -norm.x, -norm.y, norm.z,
+                -hwidth, -hheight, -hdepth,     0.0, 1.0, 1.0, 1.0, 0.75, 0.5, -norm.x, -norm.y, -norm.z,
+                -hwidth, hheight, -hdepth,      0.5, 0.5, 1.0, 1.0, 0.75, 0.25, -norm.x, norm.y, -norm.z,
     
-                -hwidth, -hheight, -hdepth,     0.0, 1.0, 0.0, 1.0, 0.75, 0.75, norm.x, norm.y, norm.z,// bottom face
-                -hwidth, -hheight, hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, norm.x, norm.y, norm.z,
-                hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, norm.y, norm.z,
-                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.5, 0.75, norm.x, norm.y, norm.z
+                -hwidth, -hheight, -hdepth,     0.0, 1.0, 0.0, 1.0, 0.75, 0.75, -norm.x, -norm.y, -norm.z,// bottom face
+                -hwidth, -hheight, hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, -norm.x, -norm.y, norm.z,
+                hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, -norm.y, norm.z,
+                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.5, 0.75, norm.x, -norm.y, -norm.z
             ];
-    
+            
+            let indis = [];
+
             if(winding == 0){
-                let indis = [
+                indis = [
                     // counter-clockwise winding
                     0, 1, 2, 2, 3, 0,
                     4, 5, 6, 6, 7, 4,
@@ -110,7 +112,7 @@ class Mesh {
                 ];
             }
             else{
-                let indis = [
+                indis = [
                     // clockwise winding
                     0, 3, 2, 2, 1, 0,
                     4, 7, 6, 6, 5, 4,
@@ -143,45 +145,45 @@ class Mesh {
 
         if(options[0]===1){// front face
             verts.push(
-                -hwidth, hheight, -hdepth,      0.0, 0.0, 1.0, 1.0, 0, 0.25, norm.x, norm.y, norm.z, 
-                -hwidth, -hheight, -hdepth,     0.0, 1.0, 0.0, 1.0, 0, 0.5, norm.x, norm.y, norm.z,
-                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.25, 0.5, norm.x, norm.y, norm.z,
-                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.25, 0.25, norm.x, norm.y, norm.z);
+                -hwidth, hheight, -hdepth,      0.0, 0.0, 1.0, 1.0, 0, 0.25, -norm.x, norm.y, -norm.z, 
+                -hwidth, -hheight, -hdepth,     0.0, 1.0, 0.0, 1.0, 0, 0.5, -norm.x, -norm.y, -norm.z,
+                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.25, 0.5, norm.x, -norm.y, -norm.z,
+                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.25, 0.25, norm.x, norm.y, -norm.z);
         }
         if(options[1]===1){// right face
             verts.push(
-                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.25, 0.25, norm.x, norm.y, norm.z, 
-                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.25, 0.5, norm.x, norm.y, norm.z,
-                hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, norm.y, norm.z,
+                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.25, 0.25, norm.x, norm.y, -norm.z, 
+                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.25, 0.5, norm.x, -norm.y, -norm.z,
+                hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, -norm.y, norm.z,
                 hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0.25, norm.x, norm.y, norm.z);
         }
         if(options[2]===1){// back face
             verts.push(
                 hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0.25, norm.x, norm.y, norm.z,
-                hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, norm.y, norm.z,
-                -hwidth, -hheight, hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, norm.x, norm.y, norm.z,
-                -hwidth, hheight, hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0.25, norm.x, norm.y, norm.z);
+                hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, -norm.y, norm.z,
+                -hwidth, -hheight, hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, -norm.x, -norm.y, norm.z,
+                -hwidth, hheight, hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0.25, -norm.x, norm.y, norm.z);
         }
         if(options[3]===1){// top face
             verts.push(
-                -hwidth, hheight, hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0, norm.x, norm.y, norm.z,
-                -hwidth, hheight, -hdepth,      0.0, 0.0, 1.0, 1.0, 0.75, 0.25, norm.x, norm.y, norm.z,
-                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.5, 0.25, norm.x, norm.y, norm.z,
+                -hwidth, hheight, hdepth,       0.5, 0.5, 1.0, 1.0, 0.75, 0, -norm.x, norm.y, norm.z,
+                -hwidth, hheight, -hdepth,      0.0, 0.0, 1.0, 1.0, 0.75, 0.25, -norm.x, norm.y, -norm.z,
+                hwidth, hheight, -hdepth,       1.0, 1.0, 0.0, 1.0, 0.5, 0.25, norm.x, norm.y, -norm.z,
                 hwidth, hheight, hdepth,        1.0, 1.0, 0.5, 1.0, 0.5, 0, norm.x, norm.y, norm.z);
         }
         if(options[4]===1){// left face
             verts.push(
-                -hwidth, hheight, hdepth,       0.0, 0.0, 1.0, 1.0, 1, 0.25, norm.x, norm.y, norm.z,
-                -hwidth, -hheight, hdepth,      0.0, 1.0, 0.0, 1.0, 1, 0.5, norm.x, norm.y, norm.z,
-                -hwidth, -hheight, -hdepth,     0.0, 1.0, 1.0, 1.0, 0.75, 0.5, norm.x, norm.y, norm.z,
-                -hwidth, hheight, -hdepth,      0.5, 0.5, 1.0, 1.0, 0.75, 0.25, norm.x, norm.y, norm.z);
+                -hwidth, hheight, hdepth,       0.0, 0.0, 1.0, 1.0, 1, 0.25, -norm.x, norm.y, norm.z,
+                -hwidth, -hheight, hdepth,      0.0, 1.0, 0.0, 1.0, 1, 0.5, -norm.x, -norm.y, norm.z,
+                -hwidth, -hheight, -hdepth,     0.0, 1.0, 1.0, 1.0, 0.75, 0.5, -norm.x, -norm.y, -norm.z,
+                -hwidth, hheight, -hdepth,      0.5, 0.5, 1.0, 1.0, 0.75, 0.25, -norm.x, norm.y, -norm.z);
         }
         if(options[5]===1){// bottom face
             verts.push(
-                -hwidth, -hheight, -hdepth,     0.0, 1.0, 0.0, 1.0, 0.75, 0.75, norm.x, norm.y, norm.z,
-                -hwidth, -hheight, hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, norm.x, norm.y, norm.z,
-                hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, norm.y, norm.z,
-                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.5, 0.75, norm.x, norm.y, norm.z);
+                -hwidth, -hheight, -hdepth,     0.0, 1.0, 0.0, 1.0, 0.75, 0.75, -norm.x, -norm.y, -norm.z,
+                -hwidth, -hheight, hdepth,      0.0, 1.0, 1.0, 1.0, 0.75, 0.5, -norm.x, -norm.y, norm.z,
+                hwidth, -hheight, hdepth,       1.0, 0.0, 1.0, 1.0, 0.5, 0.5, norm.x, -norm.y, norm.z,
+                hwidth, -hheight, -hdepth,      1.0, 0.0, 0.0, 1.0, 0.5, 0.75, norm.x, -norm.y, -norm.z);
         }
 
         let indis = [
@@ -203,10 +205,6 @@ class Mesh {
      * @param {WebGLRenderingContext} gl 
      */
     render( gl ) {
-        gl.cullFace( gl.BACK );
-        gl.enable( gl.CULL_FACE );
-        
-        //gl.useProgram( this.program );
         gl.bindBuffer( gl.ARRAY_BUFFER, this.verts );
         gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.indis );
 

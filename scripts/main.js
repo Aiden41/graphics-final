@@ -8,6 +8,8 @@ let gl=canvas.getContext('webgl2', glContextAttributes);
 
 gl.clearColor(0.9,0.9,1.0,1.0);
 gl.enable( gl.DEPTH_TEST );
+gl.cullFace( gl.BACK );
+gl.enable( gl.CULL_FACE );
 gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
 
 let vertex_source =
@@ -152,7 +154,7 @@ let xor_sphere_mesh = make_uv_sphere(gl, shader_program, 16, xor_mat);
 let persp = Mat4.frustum(left, right, bottom, top1, near, far);
 set_uniform_matrix4(gl, shader_program, "persp", persp.data);
 let view = Mat4.identity();
-const movement = 0.03;
+let movement = 0.03;
 let movement_vec = new Vec4(0, 0, -2.5);
 const rotation_speed = movement/tau;
 let yaw = 0;
@@ -185,11 +187,11 @@ point2.data = new Light([5.0, -2.0, 0.0], [0.0, 0.0, 1.0], 1);
 
 //boxes
 // let box1 = scene.add_child();
-// box1.data = Mesh.inverse_options_box(gl, shader_program, 10, 7, 10, brick_wall, [1,1,0,1,0,1]);
+// box1.data = Mesh.box(gl, shader_program, 10, 7, 10, brick_wall, 1);
 // box1.position = new Vec4(5,0,0);
 
 // let box2 = scene.add_child();
-// box2.data = Mesh.inverse_options_box(gl, shader_program, 10, 7, 10, brick_wall, [1,0,0,1,1,1]);
+// box2.data = Mesh.box(gl, shader_program, 10, 7, 10, brick_wall, 1);
 // box2.position = new Vec4(-5,0,0);
 
 //walls
@@ -327,7 +329,6 @@ function make_uv_sphere( gl, program, subdivs, material) {
 };
 
 function update() {
-    sphere1.position
     let basis_x = view.basis_x();
     let basis_y = view.basis_y();
     let basis_z = view.basis_z();
@@ -378,6 +379,14 @@ function update() {
     if(keys.is_key_down('KeyE'))
     {
         roll += rotation_speed;
+    }
+    if(keys.is_key_up('ShiftLeft'))
+    {
+        movement = 0.03;
+    }
+    if(keys.is_key_down('ShiftLeft'))
+    {
+        movement = 0.06;
     }
     view = Mat4.translation(movement_vec.x, movement_vec.y, movement_vec.z).mul(Mat4.rotation_xz(yaw).mul(Mat4.rotation_yz(pitch).mul(Mat4.rotation_xy(roll))));
     set_uniform_vec3_array(gl, shader_program, 'camera_pos', [movement_vec.x, movement_vec.y, movement_vec.z]);
