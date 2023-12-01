@@ -15,9 +15,6 @@ let vertex_source =
     `#version 300 es
     precision mediump float;
 
-    layout (location = 0) in vec3 aPos;
-    out vec3 TexCoords;
-
     uniform mat4 modelview;
     uniform mat4 persp;
     in vec2 uv;
@@ -33,8 +30,7 @@ let vertex_source =
 
     void main(void){
 
-        TexCoords = aPos;
-        gl_Position = persp * modelview * (vec4(coordinates,1.0) + vec4(aPos, 1.0));
+        gl_Position = persp * modelview * (vec4(coordinates,1.0));
         v_color = color;
         v_uv = uv;
         v_normals = normals;
@@ -46,9 +42,6 @@ let vertex_source =
 let fragment_source = 
     `#version 300 es
     precision mediump float;
-
-    in vec3 TexCoords;
-    uniform samplerCube skybox;
 
     in vec2 v_uv;
     in vec4 v_color;
@@ -117,7 +110,7 @@ let fragment_source =
             }
         }
 
-        f_color = f_color * texture( tex_0, v_uv ) * texture(skybox, TexCoords);
+        f_color = f_color * texture( tex_0, v_uv );
     }`;
 
 let vert_shader = gl.createShader(gl.VERTEX_SHADER);
@@ -181,20 +174,6 @@ const rotation_speed = movement/tau;
 let yaw = 0;
 let pitch = 0;
 let roll = 0;
-
-//cubemap
-
-let cubemapTexture = loadCubemap(gl, ["src/textures/minecraftBackground.jpg",
-                                    "src/textures/minecraftBackground.jpg",
-                                    "src/textures/minecraftBackground.jpg",
-                                    "src/textures/minecraftBackground.jpg",
-                                    "src/textures/minecraftBackground.jpg",
-                                    "src/textures/minecraftBackground.jpg"
-                                ])
-
-//skyboxShader.use();
-
-
 
 let scene = new Node();
 
