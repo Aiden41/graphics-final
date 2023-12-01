@@ -148,6 +148,18 @@ let bottom = -top1;
 let right = top1 * 16/9;
 let left = -right;
 
+//------------- new textures --------------------
+
+let cream_wall_texture = loadTexture('src/textures/Stock_Cream_Wall.jpg');
+let concrete_floor_texture = loadTexture('src/textures/Concrete_Floor.jpg');
+
+let java_base_textue = loadTexture('src/textures/Java_Logo_Base.png');
+let java_top_texture = loadTexture('src/textures/Java_Logo_Top.png');
+
+let space_background_texture = loadTexture('src/textures/Space_Background.jpg');
+
+//------------- end of new textures -------------------------------
+
 let metal_texture = loadTexture('src/textures/metal_scale.png');
 let metal_scale = new Material(0.25, 1.0, 2.0, 4.0, metal_texture);
 let metal_sphere_mesh = make_uv_sphere(gl, shader_program, 16, metal_scale);
