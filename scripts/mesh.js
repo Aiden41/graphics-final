@@ -34,6 +34,80 @@ class Mesh {
         return new Mesh( gl, program, verts, indis, material);
     };
 
+    
+    /**
+     * Create a box mesh with the given dimensions and colors.
+     * @param {WebGLRenderingContext} gl 
+     */
+    static height_map( gl, program,heights, material ) {
+        //heightmap
+        let rows = heights.length
+        let cols = heights[0].length
+        let off_x = cols/2;
+        let off_y = rows/2;
+        const MIN_HEIGHT_COLOR = 0.2;
+
+        let verts = [];
+        let indis = [];
+        let indi_start = 0;
+        
+        for(let row = 1; row < rows; row++){
+            for(let col = 1; col < cols; col++){
+                let pos_tl = heights[row - 1][col - 1];
+                let pos_tr = heights[row - 1][col];
+                let pos_bl = heights[row][col - 1];
+                let pos_br = heights[row][col];
+
+                let v_tl = new Vec4( -1, pos_tl, -1 );
+                let v_tr = new Vec4( 0, pos_tr, -1 );
+                let v_bl = new Vec4( -1, pos_bl, 0 );
+                let v_br = new Vec4( 0, pos_br, 0 );
+
+                let normal_t1 = v_bl.normal_of_triangle( v_tl, v_tr, v_bl );
+                let normal_t2 = v_bl.normal_of_triangle( v_br, v_bl, v_tr );
+
+                v_tl.x += col - off_x;
+                v_tl.z += row - off_y;
+
+                v_tr.x += col - off_x;
+                v_tr.z += row - off_y;
+
+                v_bl.x += col - off_x;
+                v_bl.z += row - off_y;
+
+                v_br.x += col - off_x;
+                v_br.z += row - off_y;
+
+
+                verts.push( v_tl.x, v_tl.y, v_tl.z,     1,0,0,1, 0,1, normal_t1.x, normal_t1.y, normal_t1.z );
+                verts.push( v_tr.x, v_tr.y, v_tr.z,     1,0,0,1, 1,1, normal_t1.x, normal_t1.y, normal_t1.z );
+                verts.push( v_bl.x, v_bl.y, v_bl.z,     1,0,0,1, 0,0, normal_t1.x, normal_t1.y, normal_t1.z );
+
+                verts.push( v_br.x, v_br.y, v_br.z,     1,0,0,1, 1,0, normal_t2.x, normal_t2.y, normal_t2.z );
+                verts.push( v_bl.x, v_bl.y, v_bl.z,     1,0,0,1, 0,0, normal_t2.x, normal_t2.y, normal_t2.z );
+                verts.push( v_tr.x, v_tr.y, v_tr.z,     1,0,0,1, 1,1, normal_t2.x, normal_t2.y, normal_t2.z );
+
+
+                indis.push(
+                    indi_start,
+                    indi_start + 1,
+                    indi_start + 2,
+                    indi_start + 3,
+                    indi_start + 4,
+                    indi_start + 5
+                    );
+                indi_start += 6;
+            }
+        }
+
+        function hm_color(height){
+            let normed_height = (height)
+        }
+
+        return new Mesh( gl, program, verts, indis, material);
+    
+    };
+
     /**
      * Create a box mesh with the given dimensions and colors.
      * @param {WebGLRenderingContext} gl 

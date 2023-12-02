@@ -69,4 +69,8 @@ class Vec4 {
 	toString() {
 		return [ '[', this.x, this.y, this.z, this.w, ']' ].join( ' ' );
 	}
+
+    normal_of_triangle(v1, v2, v3){
+        return (v2.sub(v1)).cross((v3.sub(v1)));
+    }
 }

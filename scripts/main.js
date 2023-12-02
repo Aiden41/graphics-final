@@ -144,21 +144,25 @@ let left = -right;
 //------------- new textures --------------------
 
 let cream_wall_texture = loadTexture('src/textures/Stock_Cream_Wall.jpg');
+let cream_wall = new Material(0.25, 1.0, 2.0, 4.0, cream_wall_texture);
+
 let concrete_floor_texture = loadTexture('src/textures/Concrete_Floor.jpg');
+let concrete_floor = new Material(0.25, 1.0, 2.0, 4.0, concrete_floor_texture);
 
 let java_base_textue = loadTexture('src/textures/Java_Logo_Base.png');
 let java_top_texture = loadTexture('src/textures/Java_Logo_Top.png');
 
 let space_background_texture = loadTexture('src/textures/Space_Background.jpg');
+let space_background = new Material(0.55, 1.0, 2.0, 4.0, space_background_texture);
 
 //------------- end of new textures -------------------------------
 
 let metal_texture = loadTexture('src/textures/metal_scale.png');
-let metal_scale = new Material(0.25, 1.0, 2.0, 4.0, metal_texture);
+let metal_scale = new Material(0.55, 1.0, 2.0, 4.0, metal_texture);
 let metal_sphere_mesh = make_uv_sphere(gl, shader_program, 16, metal_scale);
 
 let brick_texture = loadTexture('src/textures/brick_wall.png');
-let brick_wall = new Material(0.25, 1.0, 2.0, 4.0, brick_texture);
+let brick_wall = new Material(0.55, 1.0, 2.0, 4.0, brick_texture);
 let brick_sphere_mesh = make_uv_sphere(gl, shader_program, 16, brick_wall);
 
 let xor_tex = makeXORTexture();
@@ -177,45 +181,39 @@ let roll = 0;
 
 let scene = new Node();
 
-//spheres
-let sphere1 = scene.add_child();
-sphere1.data = metal_sphere_mesh;
-sphere1.scale = new Vec4(2,2,2);
-sphere1.position = new Vec4(0,0,0);
+let heightmap1 = scene.add_child();
+heightmap1.data = Mesh.height_map(gl,shader_program,[[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]],brick_wall);
+heightmap1.position = new Vec4(0,-2,0);
 
-let sphere2 = sphere1.add_child();
-sphere2.position = new Vec4(1,0,0);
-sphere2.data = brick_sphere_mesh;
-
-let sphere3 = sphere1.add_child();
-sphere3.position = new Vec4(-1,0,0);
-sphere3.scale = new Vec4(0.5, 0.5, 0.5);
-sphere3.data = metal_sphere_mesh;
-
-//lights
-let point1 = scene.add_child();
-point1.data = new Light([-2.5, -2.0, -0.5], [1.0, 0.0, 0.0], 1);
-
-let point2 = scene.add_child();
-point2.data = new Light([5.0, -2.0, 0.0], [0.0, 0.0, 1.0], 1);
-
-//boxes
-// let box1 = scene.add_child();
-// box1.data = Mesh.box(gl, shader_program, 10, 7, 10, brick_wall, 1);
-// box1.position = new Vec4(5,0,0);
-
-// let box2 = scene.add_child();
-// box2.data = Mesh.box(gl, shader_program, 10, 7, 10, brick_wall, 1);
-// box2.position = new Vec4(-5,0,0);
 
 //walls
-let wall1 = scene.add_child();
-wall1.data = Mesh.wall(gl,shader_program,10,7,brick_wall);
-wall1.position = new Vec4(-5,0,1);
+function addWall(name, w_width, w_height, w_material, positionOfWall,wroll=0,wpitch=0,wyaw=0){
+    name = scene.add_child();
+    name.data = Mesh.wall(gl,shader_program,w_width,w_height,w_material);
+    name.position = new Vec4(positionOfWall[0],positionOfWall[1],positionOfWall[2]);
+    name.roll = wroll;
+    name.pitch = wpitch;
+    name.yaw = wyaw;
+}
+let wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10;
+//front
+addWall(wall1,20,7,cream_wall,[-10,0,5]);
+addWall(wall2,20,7,cream_wall,[10,0,5]);
+//back
+addWall(wall3,20,7,cream_wall,[-10,0,-5]);
+addWall(wall4,20,7,cream_wall,[10,0,-5]);
+//left
+addWall(wall5,10,7,cream_wall,[-20,0,0],0,0,0.25);
+//right
+addWall(wall6,10,7,cream_wall,[20,0,0],0,0,0.25);
+//bottom
+addWall(wall7,20,10,concrete_floor,[-10,-3.5,0],0,0.25);
+addWall(wall8,20,10,concrete_floor,[10,-3.5,0],0,0.25);
+//top
+addWall(wall9,20,10,space_background,[-10,3.5,0],0,0.25);
+addWall(wall10,20,10,space_background,[10,3.5,0],0,0.25);
 
-let wall2 = scene.add_child();
-wall2.data = Mesh.wall(gl,shader_program,10,7,brick_wall);
-wall2.position = new Vec4(5,0,1);
+//
 
 
 
@@ -229,11 +227,19 @@ loadTheMesh('/src/models/java.obj', 1, function(){
     java.data = loading_mesh;
 });
 
-let cow = scene.add_child();
-cow.position = new Vec4(-5, 0, -1);
-loadTheMesh('/src/models/cow.obj', 1, function(){
-    cow.data = loading_mesh;
-});
+let pointL3 = java.add_child();
+pointL3.data = new Light([0,0,0],[0,0,1],1);
+
+// let cow = scene.add_child();
+// cow.position = new Vec4(-5, 0, -1);
+// loadTheMesh('/src/models/cow.obj', 1, function(){
+//     cow.data = loading_mesh;
+// });
+
+
+
+
+
 
 gl.viewport( 0, 0, 1280, 720 );
 
@@ -265,10 +271,10 @@ function render(){
 
 function generate_render_jobs(parent_matrix, node, jobs, lights){
     if( node.data instanceof Light ) {
-        lights.push( new RenderLight( node.data.location, node.data.color, node.data.type ) );
-        for(let child of node.children){
-            generate_render_jobs(matrix, child, jobs, lights);
-        };
+        let parent_position = parent_matrix.basis_w();
+        let position = parent_position.add(new Vec4(node.data.location[0], node.data.location[1], node.data.location[2]));
+        let light_position = [position.x, position.y, position.z];
+        lights.push( new RenderLight( light_position, node.data.color, node.data.type ) );
     }
     else{
         let matrix = parent_matrix.mul(node.get_matrix());
@@ -371,7 +377,7 @@ function make_uv_sphere( gl, program, subdivs, material) {
 
 function update() {
     let basis_x = view.basis_x();
-    let basis_y = view.basis_y();
+    let basis_y = 0;//view.basis_y();
     let basis_z = view.basis_z();
     if(keys.is_key_down('ArrowUp'))
     {
@@ -405,14 +411,6 @@ function update() {
     {
         movement_vec = movement_vec.add(basis_x.scaled(movement));
     }
-    if(keys.is_key_down('KeyC'))
-    {
-        movement_vec = movement_vec.add(basis_y.scaled(-movement));
-    }
-    if(keys.is_key_down('Space'))
-    {
-        movement_vec = movement_vec.add(basis_y.scaled(movement));
-    }
     if(keys.is_key_down('KeyQ'))
     {
         roll -= rotation_speed;
@@ -429,7 +427,10 @@ function update() {
     {
         movement = 0.06;
     }
-    view = Mat4.translation(movement_vec.x, movement_vec.y, movement_vec.z).mul(Mat4.rotation_xz(yaw).mul(Mat4.rotation_yz(pitch).mul(Mat4.rotation_xy(roll))));
+
+    java.yaw += 0.001;
+    
+    view = Mat4.translation(movement_vec.x, 0, movement_vec.z).mul(Mat4.rotation_xz(yaw).mul(Mat4.rotation_yz(pitch).mul(Mat4.rotation_xy(roll))));
     set_uniform_vec3_array(gl, shader_program, 'camera_pos', [movement_vec.x, movement_vec.y, movement_vec.z]);
 };
 

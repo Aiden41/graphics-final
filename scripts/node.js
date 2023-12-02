@@ -28,6 +28,7 @@ class Node {
 
     get_matrix(){
         let matrix = new Mat4();
+       
         matrix = matrix.mul(Mat4.translation(this.position.x, this.position.y, this.position.z));
         matrix = matrix.mul(Mat4.rotation_xz(this.yaw));
         matrix = matrix.mul(Mat4.rotation_yz(this.pitch));
@@ -36,15 +37,6 @@ class Node {
         return matrix;
     };
 
-    render(parent_matrix){
-        for( let child of this.children){
-            let matrix = parent_matrix.mul(this.get_matrix());
-            if( child.data instanceof Mesh){
-                child.data.render();
-            }
-            child.render(matrix);
-        }
-    }
 
 };
 
