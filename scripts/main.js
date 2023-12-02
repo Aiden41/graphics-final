@@ -172,7 +172,7 @@ let xor_sphere_mesh = make_uv_sphere(gl, shader_program, 16, xor_mat);
 let persp = Mat4.frustum(left, right, bottom, top1, near, far);
 set_uniform_matrix4(gl, shader_program, "persp", persp.data);
 let view = Mat4.identity();
-let movement = 0.03;
+let movement = 0.06;
 let movement_vec = new Vec4(0, 0, -2.5);
 const rotation_speed = movement/tau;
 let yaw = 0;
@@ -185,8 +185,49 @@ let heightmap1 = scene.add_child();
 heightmap1.data = Mesh.height_map(gl,shader_program,[[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]],brick_wall);
 heightmap1.position = new Vec4(0,-2,0);
 
+let sunSpin = 0;
+let sun = scene.add_child();
+sun.data = make_uv_sphere(gl,shader_program,15,brick_wall);
+sun.scale = new Vec4(2,2,2);
+sun.position = new Vec4(-10,-5,25);
+
+let sun_light = sun.add_child();
+sun_light.data = new Light([-10,-5,25],[1,0,0],1);
+
+let sun_reverse = scene.add_child();
+sun_reverse.data = make_uv_sphere(gl,shader_program,15,brick_wall);
+sun_reverse.scale = new Vec4(1.8,1.8,1.8);
+sun_reverse.position = new Vec4(-10,-5,25);
+
+
+let planet1 = sun.add_child();
+planet1.data = make_uv_sphere(gl,shader_program,15,brick_wall);
+planet1.scale = new Vec4(0.5,0.5,0.5);
+planet1.position = new Vec4(0,0,-3);
+
+let moon1 = planet1.add_child();
+moon1.data = make_uv_sphere(gl,shader_program,15,brick_wall);
+moon1.scale = new Vec4(0.5,0.5,0.5);
+moon1.position = new Vec4(0,0,-2);
+
+
+let planet2 = sun_reverse.add_child();
+planet2.data = make_uv_sphere(gl,shader_program,15,brick_wall);
+planet2.scale = new Vec4(0.35,0.35,0.35);
+planet2.position = new Vec4(0,0,-5);
+
+let sun_slow = scene.add_child();
+sun_slow.data = make_uv_sphere(gl,shader_program,15,brick_wall);
+sun_slow.position = new Vec4(-10,-5,25);
+
+let planet3 = sun_slow.add_child();
+planet3.data = make_uv_sphere(gl,shader_program,15,brick_wall);
+planet3.scale = new Vec4(0.8,0.8,0.8);
+planet3.position = new Vec4(0,0,2);
+
 
 //walls
+//WARNING this leaves the variables as local, meaning all wall names outside of this function are "undefined"
 function addWall(name, w_width, w_height, w_material, positionOfWall,wroll=0,wpitch=0,wyaw=0){
     name = scene.add_child();
     name.data = Mesh.wall(gl,shader_program,w_width,w_height,w_material);
@@ -196,24 +237,52 @@ function addWall(name, w_width, w_height, w_material, positionOfWall,wroll=0,wpi
     name.yaw = wyaw;
 }
 let wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10;
+let fence_post1,fence_post2,fence_post3,fence_post4,fence_post5,fence_post6,fence_post7, fence_rail;
+let inner1_wall,inner1_door,inner2_wall,inner2_door;
 //front
-addWall(wall1,20,7,cream_wall,[-10,0,5]);
-addWall(wall2,20,7,cream_wall,[10,0,5]);
+addWall(wall1,20,7,cream_wall,[-25,0,5]);
+addWall(wall2,10,7,cream_wall,[0,0,5]);
 //back
-addWall(wall3,20,7,cream_wall,[-10,0,-5]);
-addWall(wall4,20,7,cream_wall,[10,0,-5]);
+addWall(wall3,20,7,cream_wall,[-25,0,-5]);
+addWall(wall4,20,7,cream_wall,[-5,0,-5]);
 //left
-addWall(wall5,10,7,cream_wall,[-20,0,0],0,0,0.25);
+addWall(wall5,10,7,cream_wall,[-35,0,0],0,0,0.25);
 //right
-addWall(wall6,10,7,cream_wall,[20,0,0],0,0,0.25);
+addWall(wall6,10,7,cream_wall,[5,0,0],0,0,0.25);
 //bottom
-addWall(wall7,20,10,concrete_floor,[-10,-3.5,0],0,0.25);
-addWall(wall8,20,10,concrete_floor,[10,-3.5,0],0,0.25);
+addWall(wall7,20,10,concrete_floor,[-25,-3.5,0],0,0.25);
+addWall(wall8,20,10,concrete_floor,[-5,-3.5,0],0,0.25);
 //top
-addWall(wall9,20,10,space_background,[-10,3.5,0],0,0.25);
-addWall(wall10,20,10,space_background,[10,3.5,0],0,0.25);
+addWall(wall9,20,10,space_background,[-25,3.5,0],0,0.25);
+addWall(wall10,20,10,space_background,[-5,3.5,0],0,0.25);
 
-//
+//2nd room fence
+addWall(fence_post1,10/13,1.5,brick_wall,[-70/13,-2.75,5]);
+addWall(fence_post2,10/13,1.5,brick_wall,[-90/13,-2.75,5]);
+addWall(fence_post3,10/13,1.5,brick_wall,[-110/13,-2.75,5]);
+addWall(fence_post4,10/13,1.5,brick_wall,[-130/13,-2.75,5]);
+addWall(fence_post5,10/13,1.5,brick_wall,[-150/13,-2.75,5]);
+addWall(fence_post6,10/13,1.5,brick_wall,[-170/13,-2.75,5]);
+addWall(fence_post7,10/13,1.5,brick_wall,[-190/13,-2.75,5]);
+addWall(fence_rail,10,0.5,brick_wall,[-10,-1.75,5]);
+
+
+//doors
+addWall(inner1_wall,5,7,cream_wall,[-5,0,2.5],0,0,0.25);
+addWall(inner1_wall,2,7,cream_wall,[-5,0,-4],0,0,0.25);
+addWall(inner1_wall,3,2,cream_wall,[-5,2.5,-1.5],0,0,0.25);
+inner1_door = scene.add_child();
+inner1_door.data = Mesh.wall(gl,shader_program,3,5,xor_mat);
+inner1_door.position = new Vec4(-5,-1,-1.5);
+inner1_door.yaw = 0.25;
+
+addWall(inner2_wall,5,7,cream_wall,[-15,0,2.5],0,0,0.25);
+addWall(inner2_wall,2,7,cream_wall,[-15,0,-4],0,0,0.25);
+addWall(inner2_wall,3,2,cream_wall,[-15,2.5,-1.5],0,0,0.25);
+inner2_door = scene.add_child();
+inner2_door.data = Mesh.wall(gl,shader_program,3,5,xor_mat);
+inner2_door.position = new Vec4(-15,-1,-1.5);
+inner2_door.yaw = 0.25;
 
 
 
@@ -221,14 +290,18 @@ addWall(wall10,20,10,space_background,[10,3.5,0],0,0.25);
 let loading_mesh = null;
 let java = scene.add_child();
 java.pitch = 0.25;
-java.position = new Vec4(5,0,-1);
+java.position = new Vec4(-20,0,2);
 java.scale = new Vec4(1,1,1);
 loadTheMesh('/src/models/java.obj', 1, function(){
     java.data = loading_mesh;
 });
 
-let pointL3 = java.add_child();
-pointL3.data = new Light([0,0,0],[0,0,1],1);
+let light_box = java.add_child();
+light_box.data = Mesh.box(gl,shader_program,0,0,0,brick_wall,0);
+light_box.position = new Vec4(0,-2,2);
+
+let pointL3 = light_box.add_child();
+pointL3.data = new Light([0,0,0],[1,0,0],1);
 
 // let cow = scene.add_child();
 // cow.position = new Vec4(-5, 0, -1);
@@ -421,14 +494,25 @@ function update() {
     }
     if(keys.is_key_up('ShiftLeft'))
     {
-        movement = 0.03;
+        movement = 0.06;
     }
     if(keys.is_key_down('ShiftLeft'))
     {
-        movement = 0.06;
+        movement = 0.12;
     }
 
-    java.yaw += 0.001;
+    sunSpin += 0.01*Math.PI;
+    sun.yaw += 0.005;
+    sun.pitch = -Math.sin(sunSpin)/18;
+    
+    sun_reverse.yaw -= 0.005;
+    sun_reverse.pitch = Math.sin(sunSpin)/18;
+
+    sun_slow.yaw += 0.0025;
+    sun_slow.pitch = -Math.sin(sunSpin/2)/18;
+
+    planet1.yaw += 0.015;
+    java.yaw += 0.005;
     
     view = Mat4.translation(movement_vec.x, 0, movement_vec.z).mul(Mat4.rotation_xz(yaw).mul(Mat4.rotation_yz(pitch).mul(Mat4.rotation_xy(roll))));
     set_uniform_vec3_array(gl, shader_program, 'camera_pos', [movement_vec.x, movement_vec.y, movement_vec.z]);
@@ -442,6 +526,13 @@ async function take_and_send_screenshot(){
     });
     const response = await fetch(request);
     const prediction = response['statusText'];
+    if(prediction === "L"){
+        scene.del_child(inner1_door);
+    }
+    if(prediction === "5"){
+        scene.del_child(inner2_door);
+    }
+    
     console.log(prediction);
     openCanvasHidden();
     return prediction;
