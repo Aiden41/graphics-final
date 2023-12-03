@@ -172,18 +172,22 @@ let xor_sphere_mesh = make_uv_sphere(gl, shader_program, 16, xor_mat);
 let persp = Mat4.frustum(left, right, bottom, top1, near, far);
 set_uniform_matrix4(gl, shader_program, "persp", persp.data);
 let view = Mat4.identity();
-let movement = 0.06;
+let movement = 0.12;
 let movement_vec = new Vec4(0, 0, -2.5);
 const rotation_speed = movement/tau;
 let yaw = 0;
 let pitch = 0;
 let roll = 0;
 
+let gamestate = 0;
+let heightmap_datamap = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]];
+
 let scene = new Node();
 
 let heightmap1 = scene.add_child();
-heightmap1.data = Mesh.height_map(gl,shader_program,[[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]],brick_wall);
-heightmap1.position = new Vec4(0,-2,0);
+heightmap1.data = Mesh.height_map(gl,shader_program,heightmap_datamap,brick_wall);
+heightmap1.position = new Vec4(-20,-3,0);
+
 
 let sunSpin = 0;
 let sun = scene.add_child();
@@ -238,7 +242,7 @@ function addWall(name, w_width, w_height, w_material, positionOfWall,wroll=0,wpi
 }
 let wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10;
 let fence_post1,fence_post2,fence_post3,fence_post4,fence_post5,fence_post6,fence_post7, fence_rail;
-let inner1_wall,inner1_door,inner2_wall,inner2_door;
+let inner1_wall,inner1_door,inner2_wall,inner2_door,inner3_wall,inner3_door;
 //front
 addWall(wall1,20,7,cream_wall,[-25,0,5]);
 addWall(wall2,10,7,cream_wall,[0,0,5]);
@@ -284,13 +288,20 @@ inner2_door.data = Mesh.wall(gl,shader_program,3,5,xor_mat);
 inner2_door.position = new Vec4(-15,-1,-1.5);
 inner2_door.yaw = 0.25;
 
+addWall(inner3_wall,5,7,cream_wall,[-25,0,2.5],0,0,0.25);
+addWall(inner3_wall,2,7,cream_wall,[-25,0,-4],0,0,0.25);
+addWall(inner3_wall,3,2,cream_wall,[-25,2.5,-1.5],0,0,0.25);
+inner3_door = scene.add_child();
+inner3_door.data = Mesh.wall(gl,shader_program,3,5,xor_mat);
+inner3_door.position = new Vec4(-25,-1,-1.5);
+inner3_door.yaw = 0.25;
 
 
 
 let loading_mesh = null;
 let java = scene.add_child();
 java.pitch = 0.25;
-java.position = new Vec4(-20,0,2);
+java.position = new Vec4(-30,0,2);
 java.scale = new Vec4(1,1,1);
 loadTheMesh('/src/models/java.obj', 1, function(){
     java.data = loading_mesh;
@@ -494,11 +505,11 @@ function update() {
     }
     if(keys.is_key_up('ShiftLeft'))
     {
-        movement = 0.06;
+        movement = 0.12;
     }
     if(keys.is_key_down('ShiftLeft'))
     {
-        movement = 0.12;
+        movement = 0.24;
     }
 
     sunSpin += 0.01*Math.PI;
@@ -526,11 +537,26 @@ async function take_and_send_screenshot(){
     });
     const response = await fetch(request);
     const prediction = response['statusText'];
-    if(prediction === "L"){
+
+    //heightmap1.data = Mesh.height_map(gl,shader_program,[[0,0,0,0],[0,0,0,1],[1,0,0,1],[0,0,0,0]],brick_wall);
+    if(prediction === "L" && gamestate === 0){
         scene.del_child(inner1_door);
+        gamestate++;
     }
-    if(prediction === "5"){
+    if(prediction === "5" && gamestate === 1){
         scene.del_child(inner2_door);
+        gamestate++;
+    }
+    if(prediction === "5" && gamestate === 2){
+        if(heightmap_datamap[1][3] === 1){
+            heightmap_datamap[1][3] = 0;
+            heightmap_datamap[2][3] = 0;
+        }else{
+            heightmap_datamap[1][3] = 1;
+            heightmap_datamap[2][3] = 1;
+        }
+        console.log(heightmap_datamap[7]);
+        heightmap1.data = Mesh.height_map(gl,shader_program,heightmap_datamap,brick_wall);
     }
     
     console.log(prediction);
