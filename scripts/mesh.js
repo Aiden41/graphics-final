@@ -120,15 +120,15 @@ class Mesh {
         let norm = new Vec4(hwidth,hheight,0,0).norm();
 
         let verts = [
-            -hwidth, hheight, 0,       0.0, 0.0, 1.0, 1.0, 0, 0, norm.x, norm.y, 0, // front face
-            -hwidth, -hheight, 0,      0.0, 1.0, 0.0, 1.0, 0, 1, norm.x, norm.y, 0,
-            hwidth, -hheight, 0,       1.0, 0.0, 0.0, 1.0, 1, 1, norm.x, norm.y, 0,
-            hwidth, hheight, 0,        1.0, 1.0, 0.0, 1.0, 1, 0, norm.x, norm.y, 0,
+            -hwidth, hheight, 0,       0.0, 0.0, 1.0, 1.0, 1, 0, norm.x, norm.y, 0, // front face
+            -hwidth, -hheight, 0,      0.0, 1.0, 0.0, 1.0, 1, 1, norm.x, norm.y, 0,
+            hwidth, -hheight, 0,       1.0, 0.0, 0.0, 1.0, 0, 1, norm.x, norm.y, 0,
+            hwidth, hheight, 0,        1.0, 1.0, 0.0, 1.0, 0, 0, norm.x, norm.y, 0,
         
-            hwidth, hheight, 0,        1.0, 1.0, 0.5, 1.0, 0, 0, norm.x, norm.y, 0,// back face
-            hwidth, -hheight, 0,       1.0, 0.0, 1.0, 1.0, 0, 1, norm.x, norm.y, 0,
-            -hwidth, -hheight, 0,      0.0, 1.0, 1.0, 1.0, 1, 1, norm.x, norm.y, 0,
-            -hwidth, hheight, 0,       0.5, 0.5, 1.0, 1.0, 1, 0, norm.x, norm.y, 0
+            hwidth, hheight, 0,        1.0, 1.0, 0.5, 1.0, 1, 0, norm.x, norm.y, 0,// back face
+            hwidth, -hheight, 0,       1.0, 0.0, 1.0, 1.0, 1, 1, norm.x, norm.y, 0,
+            -hwidth, -hheight, 0,      0.0, 1.0, 1.0, 1.0, 0, 1, norm.x, norm.y, 0,
+            -hwidth, hheight, 0,       0.5, 0.5, 1.0, 1.0, 0, 0, norm.x, norm.y, 0
         ];
 
         let indis = [

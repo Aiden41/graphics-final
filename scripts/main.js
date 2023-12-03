@@ -6,7 +6,7 @@ var glContextAttributes = { preserveDrawingBuffer: true };
 /** @type {WebGLRenderingContext} */
 let gl=canvas.getContext('webgl2', glContextAttributes);
 
-gl.clearColor(0.9,0.9,1.0,1.0);
+gl.clearColor(0,0,0,1.0);
 gl.enable( gl.DEPTH_TEST );
 gl.enable( gl.CULL_FACE );
 gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
@@ -152,8 +152,23 @@ let concrete_floor = new Material(0.25, 1.0, 2.0, 4.0, concrete_floor_texture);
 let java_base_textue = loadTexture('src/textures/Java_Logo_Base.png');
 let java_top_texture = loadTexture('src/textures/Java_Logo_Top.png');
 
+let grantDoor_off_tex = loadTexture('src/textures/grantDoor_off.jpg');
+let grantDoor_off = new Material(0.55, 1.0, 2.0, 4.0, grantDoor_off_tex);
+
 let space_background_texture = loadTexture('src/textures/Space_Background.jpg');
 let space_background = new Material(0.55, 1.0, 2.0, 4.0, space_background_texture);
+
+let question_1_tex = loadTexture('src/textures/firstquestion.png');
+let question_1 = new Material(0.55, 1.0, 2.0, 4.0, question_1_tex);
+
+let question_2_tex = loadTexture('src/textures/secondquestion.png');
+let question_2 = new Material(0.55, 1.0, 2.0, 4.0, question_2_tex);
+
+let question_3_tex = loadTexture('src/textures/thirdquestion.png');
+let question_3 = new Material(0.55, 1.0, 2.0, 4.0, question_3_tex);
+
+let question_4_tex = loadTexture('src/textures/fourthquestion.png');
+let question_4 = new Material(0.55, 1.0, 2.0, 4.0, question_4_tex);
 
 //------------- end of new textures -------------------------------
 
@@ -240,17 +255,20 @@ function addWall(name, w_width, w_height, w_material, positionOfWall,wroll=0,wpi
     name.pitch = wpitch;
     name.yaw = wyaw;
 }
-let wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10;
+let wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12;
 let fence_post1,fence_post2,fence_post3,fence_post4,fence_post5,fence_post6,fence_post7, fence_rail;
 let inner1_wall,inner1_door,inner2_wall,inner2_door,inner3_wall,inner3_door;
 //front
-addWall(wall1,20,7,cream_wall,[-25,0,5]);
+addWall(wall1,10,7,cream_wall,[-30,0,5]);
+addWall(wall12,10,7,cream_wall,[-20,0,5]);
 addWall(wall2,10,7,cream_wall,[0,0,5]);
 //back
-addWall(wall3,20,7,cream_wall,[-25,0,-5]);
-addWall(wall4,20,7,cream_wall,[-5,0,-5]);
+addWall(wall3,10,7,question_4,[-30,0,-5]);
+addWall(wall4,10,7,question_2,[-10,0,-5]);
+addWall(wall11,10,7,question_1,[0,0,-5]);
+addWall(wall12,10,7,question_3,[-20,0,-5]);
 //left
-addWall(wall5,10,7,cream_wall,[-35,0,0],0,0,0.25);
+addWall(wall5,10,7,grantDoor_off,[-35,0,0],0,0,0.25);
 //right
 addWall(wall6,10,7,cream_wall,[5,0,0],0,0,0.25);
 //bottom
@@ -259,6 +277,7 @@ addWall(wall8,20,10,concrete_floor,[-5,-3.5,0],0,0.25);
 //top
 addWall(wall9,20,10,space_background,[-25,3.5,0],0,0.25);
 addWall(wall10,20,10,space_background,[-5,3.5,0],0,0.25);
+
 
 //2nd room fence
 addWall(fence_post1,10/13,1.5,brick_wall,[-70/13,-2.75,5]);
@@ -543,22 +562,47 @@ async function take_and_send_screenshot(){
         scene.del_child(inner1_door);
         gamestate++;
     }
-    if(prediction === "5" && gamestate === 1){
+    else if(prediction === "3" && gamestate === 1){
         scene.del_child(inner2_door);
         gamestate++;
     }
-    if(prediction === "5" && gamestate === 2){
-        if(heightmap_datamap[1][3] === 1){
-            heightmap_datamap[1][3] = 0;
-            heightmap_datamap[2][3] = 0;
-        }else{
-            heightmap_datamap[1][3] = 1;
-            heightmap_datamap[2][3] = 1;
+    else if(gamestate === 2){
+        if(prediction === "1"){
+            heightmap_datamap[1][1] ^= 1;
+            heightmap_datamap[1][2] ^= 1;
+            heightmap_datamap[2][1] ^= 1;
         }
-        console.log(heightmap_datamap[7]);
+        if(prediction === "2"){
+            heightmap_datamap[1][1] ^= 1;
+            heightmap_datamap[2][1] ^= 1;
+        }
+        if(prediction === "3"){
+            heightmap_datamap[1][1] ^= 1;
+            heightmap_datamap[2][2] ^= 1;
+        }
+        if(prediction === "4"){
+            heightmap_datamap[1][1] ^= 1;
+            heightmap_datamap[1][2] ^= 1;
+        }
+
         heightmap1.data = Mesh.height_map(gl,shader_program,heightmap_datamap,brick_wall);
+
+        if( heightmap_datamap[1][1] === 1 && heightmap_datamap[1][2] === 1 && heightmap_datamap[2][1] === 1 && heightmap_datamap[2][2] === 1){
+            scene.del_child(inner3_door);
+            gamestate++;
+        }
+    }
+    else if(gamestate === 3){
+        if(prediction === "N"){
+            
+        }
+        else if(prediction === "Y"){
+
+        }
     }
     
+    
+
     console.log(prediction);
     openCanvasHidden();
     return prediction;
