@@ -149,8 +149,11 @@ let cream_wall = new Material(0.55, 0.5, 1.0, 2.0, cream_wall_texture);
 let concrete_floor_texture = loadTexture('src/textures/Concrete_Floor.jpg');
 let concrete_floor = new Material(0.25, 1.0, 2.0, 4.0, concrete_floor_texture);
 
-let java_base_textue = loadTexture('src/textures/Java_Logo_Base.png');
+let java_base_texture = loadTexture('src/textures/Java_Logo_Base.png');
+let java_base_mat = new Material(0.55, 1.0, 2.0, 4.0, java_base_texture);
+
 let java_top_texture = loadTexture('src/textures/Java_Logo_Top.png');
+let java_top_mat = new Material(0.55, 1.0, 2.0, 4.0, java_top_texture);
 
 let grantDoor_off_tex = loadTexture('src/textures/grantDoor_off.jpg');
 let grantDoor_off = new Material(0.55, 1.0, 2.0, 4.0, grantDoor_off_tex);
@@ -355,24 +358,54 @@ let java = scene.add_child();
 java.pitch = 0.25;
 java.position = new Vec4(-30,0,2);
 java.scale = new Vec4(1,1,1);
-loadTheMesh('/src/models/java.obj', 1, metal_scale, function(){
+loadTheMesh('/src/models/java.obj', 1, java_base_mat, function(){
     java.data = loading_mesh;
 });
 
+let javamid = java.add_child();
+
+javamid.position = new Vec4(0,0,0);
+//javamid.scale = new Vec4(1.1,1.1,1.1);
+loadTheMesh('/src/models/javamid.obj', 1, java_base_mat, function(){
+    javamid.data = loading_mesh;
+});
+
+
 let check1 = scene.add_child();
-check1.position = new Vec4(0,0,2);
+check1.position = new Vec4(-30,0,4);
 check1.scale = new Vec4(0,0,0);
 loadTheMesh('/src/models/checkmark.obj', 1, green, function(){
     check1.data = loading_mesh;
 });
 
+let check2 = scene.add_child();
+check2.position = new Vec4(0,-0.5,2.5);
+check2.scale = new Vec4(0,0,0);
+loadTheMesh('/src/models/checkmark.obj', 1, green, function(){
+    check2.data = loading_mesh;
+});
+
+let check3 = check2.add_child();
+check3.position = new Vec4(-3.5,0,0);
+check3.scale = new Vec4(0.2,0.2,0.2);
+loadTheMesh('/src/models/checkmark.obj', 1, green, function(){
+    check3.data = loading_mesh;
+});
+
+let check4 = check2.add_child();
+check4.position = new Vec4(3.5,0,0);
+check4.scale = new Vec4(0.2,0.2,0.2);
+loadTheMesh('/src/models/checkmark.obj', 1, green, function(){
+    check4.data = loading_mesh;
+});
+
 let light_spheres = scene.add_child();
 light_spheres.data = Mesh.box(gl,shader_program,0,0,0,brick_wall,0);
-light_spheres.scale = new Vec4(0,0,0);
+light_spheres.scale = new Vec4(-30,0,0);
 
 let light_sphere1 = light_spheres.add_child();
 light_sphere1.data = make_uv_sphere(gl,shader_program,15,green);
-light_sphere1.position = new Vec4(-4.5,3,4.5);
+light_sphere1.position = new Vec4(-34.5,3,4.5);
 
 let light_spin1 = light_sphere1.add_child();
 light_spin1.data = Mesh.box(gl,shader_program,0,0,0,brick_wall,0);
@@ -380,7 +413,7 @@ light_spin1.position = new Vec4(0,0,2);
 
 let light_sphere2 = light_spheres.add_child();
 light_sphere2.data = make_uv_sphere(gl,shader_program,15,green);
-light_sphere2.position = new Vec4(4.5,3,4.5);
+light_sphere2.position = new Vec4(-25.5,3,4.5);
 
 let light_spin2 = light_sphere2.add_child();
 light_spin2.data = Mesh.box(gl,shader_program,0,0,0,brick_wall,0);
@@ -597,6 +630,7 @@ function update() {
     sun_slow.pitch = -Math.sin(sunSpin/2)/18;
     planet1.yaw += 0.015;
     
+    check2.yaw += 0.005;
     java.yaw += 0.005;
     light_box2.yaw -= 0.005;
     light_sphere1.yaw += 0.005;
@@ -618,16 +652,7 @@ async function take_and_send_screenshot(){
     //heightmap1.data = Mesh.height_map(gl,shader_program,[[0,0,0,0],[0,0,0,1],[1,0,0,1],[0,0,0,0]],brick_wall);
     if(prediction === "L" && gamestate === 0){
         scene.del_child(inner1_door);
-        
-        check1.scale = new Vec4(0.5,0.5,0.5);
-
-        light_spheres.scale = new Vec4(1,1,1);
-        let pointL4 = light_spin1.add_child();
-        pointL4.data = new Light([0,0,0],[0,2,0],1);
-        let pointL5 = light_spin2.add_child();
-        pointL5.data = new Light([0,0,0],[0,2,0],1);
-        
-
+        check2.scale = new Vec4(0.5,0.5,0.5);
         gamestate++;
     }
     else if(prediction === "3" && gamestate === 1){
@@ -662,7 +687,16 @@ async function take_and_send_screenshot(){
     }
     else if(gamestate === 3){
         if(prediction === "N"){
+            light_spin3.del_child(pointL3);
+            scene.del_child(java);
             
+            check1.scale = new Vec4(0.5,0.5,0.5);
+
+            light_spheres.scale = new Vec4(1,1,1);
+            let pointL4 = light_spin1.add_child();
+            pointL4.data = new Light([0,0,0],[0,2,0],1);
+            let pointL5 = light_spin2.add_child();
+            pointL5.data = new Light([0,0,0],[0,2,0],1);
         }
         else if(prediction === "Y"){
 
