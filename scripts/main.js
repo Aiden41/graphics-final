@@ -151,8 +151,8 @@ let left = -right;
 let cream_wall_texture = loadTexture('src/textures/Stock_Cream_Wall.jpg');
 let cream_wall = new Material(0.55, 0.5, 1.0, 2.0, cream_wall_texture);
 
-let concrete_floor_texture = loadTexture('src/textures/Concrete_Floor.jpg');
-let concrete_floor = new Material(0.25, 1.0, 2.0, 4.0, concrete_floor_texture);
+let carpet_texture = loadTexture('src/textures/carpet.jpg');
+let carpet = new Material(0.25, 1.0, 2.0, 4.0, carpet_texture);
 
 let java_base_texture = loadTexture('src/textures/Java_Logo_Base.png');
 let java_base_mat = new Material(0.55, 1.0, 2.0, 4.0, java_base_texture);
@@ -162,6 +162,9 @@ let java_top_mat = new Material(0.55, 1.0, 2.0, 4.0, java_top_texture);
 
 let grantDoor_off_tex = loadTexture('src/textures/grantDoor_off.jpg');
 let grantDoor_off = new Material(0.55, 1.0, 2.0, 4.0, grantDoor_off_tex);
+
+let ceiling_tex = loadTexture('src/textures/ceiling.jpg');
+let ceiling = new Material(0.55, 1.0, 2.0, 4.0, ceiling_tex);
 
 let grantDoor_on_tex = loadTexture('src/textures/grantDoor_on.jpg');
 let grantDoor_on = new Material(0.55, 1.0, 2.0, 4.0, grantDoor_on_tex);
@@ -230,7 +233,7 @@ let scene = new Node();
 
 let heightmap1 = scene.add_child();
 heightmap1.data = Mesh.height_map(gl,shader_program,heightmap_datamap,brick_wall);
-heightmap1.position = new Vec4(-20,-3,0);
+heightmap1.position = new Vec4(-20,-3.3,0);
 
 
 let sunSpin = 0;
@@ -322,11 +325,11 @@ wall17.yaw = 0.25;
 //right
 addWall(wall6,10,7,cream_wall,[5,0,0],0,0,0.25);
 //bottom
-addWall(wall7,20,10,concrete_floor,[-25,-3.5,0],0,0.25);
-addWall(wall8,20,10,concrete_floor,[-5,-3.5,0],0,0.25);
+addWall(wall7,20,10,carpet,[-25,-3.5,0],0,0.25);
+addWall(wall8,20,10,carpet,[-5,-3.5,0],0,0.25);
 //top
-addWall(wall9,20,10,cream_wall,[-25,3.5,0],0,0.25);
-addWall(wall10,20,10,cream_wall,[-5,3.5,0],0,0.25);
+addWall(wall9,20,10,ceiling,[-25,3.5,0],0,0.25);
+addWall(wall10,20,10,ceiling,[-5,3.5,0],0,0.25);
 
 
 //2nd room fence
