@@ -295,7 +295,7 @@ let inner1_wall,inner1_door,inner2_wall,inner2_door,inner3_wall,inner3_door;
 //front
 addWall(wall1,10,7,cream_wall,[-30,0,5]);
 addWall(wall12,10,7,cream_wall,[-20,0,5]);
-addWall(wall2,10,7,cream_wall,[0,0,5]);
+addWall(wall2,10,7,cream_wall,[0,0,5], 0, 0, 0.5);
 //back
 addWall(wall3,10,7,cream_wall,[-30,0,-5]);
 addWall(wall14,6,1,question_4,[-30,1,-4.99]);
@@ -358,7 +358,7 @@ let java = scene.add_child();
 java.pitch = 0.25;
 java.position = new Vec4(-30,0,2);
 java.scale = new Vec4(1,1,1);
-loadTheMesh('/src/models/java.obj', 1, java_base_mat, function(){
+loadTheMesh('/src/models/java.obj', 1, java_top_mat, function(){
     java.data = loading_mesh;
 });
 
@@ -366,10 +366,12 @@ let javamid = java.add_child();
 
 javamid.position = new Vec4(0,0,0);
 //javamid.scale = new Vec4(1.1,1.1,1.1);
-loadTheMesh('/src/models/javamid.obj', 1, java_base_mat, function(){
+loadTheMesh('/src/models/javamid.obj', 1, java_top_mat, function(){
     javamid.data = loading_mesh;
 });
 
+let java_light = java.add_child();
+java_light.data = new Light([0,0.5,0],[0.3,0,0],0);
 
 let check1 = scene.add_child();
 check1.position = new Vec4(-30,0,4);
@@ -675,10 +677,10 @@ async function take_and_send_screenshot(){
         scene.del_child(inner1_door);
         check2.scale = new Vec4(0.5,0.5,0.5);
         let check_light1 = check3.add_child();
-        check_light1.data = new Light([0,0,0],[0,1,0],1);
+        check_light1.data = new Light([0,0,0],[0,0.17,0],0);
 
         let check_light2 = check4.add_child();
-        check_light2.data = new Light([0,0,0],[0,1,0],1);
+        check_light2.data = new Light([0,0,0],[0,0.17,0],0);
         gamestate++;
     }
     else if((prediction === "3" || prediction === "J") && gamestate === 1){
