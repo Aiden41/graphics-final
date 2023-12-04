@@ -684,20 +684,20 @@ async function take_and_send_screenshot(){
         gamestate++;
     }
     else if(gamestate === 2){
-        if(prediction === "1"){
+        if(prediction === "1" || prediction === "I" || prediction === "L"){
             heightmap_datamap[1][1] ^= 1;
             heightmap_datamap[1][2] ^= 1;
             heightmap_datamap[2][1] ^= 1;
         }
-        if(prediction === "2"){
+        if(prediction === "2" || prediction === "Z"){
             heightmap_datamap[1][1] ^= 1;
             heightmap_datamap[2][1] ^= 1;
         }
-        if(prediction === "3"){
+        if(prediction === "3" || prediction === "J"){
             heightmap_datamap[1][1] ^= 1;
             heightmap_datamap[2][2] ^= 1;
         }
-        if(prediction === "4"){
+        if(prediction === "4" || prediction === "H"){
             heightmap_datamap[1][1] ^= 1;
             heightmap_datamap[1][2] ^= 1;
         }
