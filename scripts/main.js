@@ -140,7 +140,7 @@ let tau = (Math.PI*2);
 let fov = 0.25*tau;
 // near and far always positive, near always less than far
 let near = 0.1;
-let far = 50;
+let far = 70;
 let top1 = Math.tan(fov/2) * near;
 let bottom = -top1;
 let right = top1 * 16/9;
@@ -195,6 +195,9 @@ let planet2_mat = new Material(0.65, 1.0, 2.0, 4.0, planet2_tex);
 
 let planet3_tex = loadTexture('src/textures/planet3.jpg');
 let planet3_mat = new Material(0.75, 1.0, 2.0, 4.0, planet3_tex);
+
+let space_tex = loadTexture('src/textures/space_box.jpg');
+let space_box_mat = new Material(0.55, 0.1, 0.1, 0.1, space_tex);
 
 let moon_tex = loadTexture('src/textures/moon.jpg');
 let moon_mat = new Material(0.55, 1.0, 2.0, 4.0, moon_tex);
@@ -330,6 +333,10 @@ addWall(wall8,20,10,carpet,[-5,-3.5,0],0,0.25);
 //top
 addWall(wall9,20,10,ceiling,[-25,3.5,0],0,0.25);
 addWall(wall10,20,10,ceiling,[-5,3.5,0],0,0.25);
+
+let space_box = scene.add_child();
+space_box.data = Mesh.inverse_options_box(gl, shader_program, 50, 50, 50, space_box_mat, [0,1,1,1,1,1]);
+space_box.position = new Vec4(-15, 0, 30);
 
 
 //2nd room fence
