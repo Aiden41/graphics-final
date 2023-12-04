@@ -45,7 +45,6 @@ class Mesh {
         let cols = heights[0].length
         let off_x = cols/2;
         let off_y = rows/2;
-        const MIN_HEIGHT_COLOR = 0.2;
 
         let verts = [];
         let indis = [];
@@ -100,10 +99,6 @@ class Mesh {
             }
         }
 
-        function hm_color(height){
-            let normed_height = (height)
-        }
-
         return new Mesh( gl, program, verts, indis, material);
     
     };
@@ -120,15 +115,15 @@ class Mesh {
         let norm = new Vec4(hwidth,hheight,0,0).norm();
 
         let verts = [
-            -hwidth, hheight, 0,       0.0, 0.0, 1.0, 1.0, 1, 0, norm.x, norm.y, 0, // front face
-            -hwidth, -hheight, 0,      0.0, 1.0, 0.0, 1.0, 1, 1, norm.x, norm.y, 0,
-            hwidth, -hheight, 0,       1.0, 0.0, 0.0, 1.0, 0, 1, norm.x, norm.y, 0,
+            -hwidth, hheight, 0,       0.0, 0.0, 1.0, 1.0, 1, 0, -norm.x, norm.y, 0, // front face
+            -hwidth, -hheight, 0,      0.0, 1.0, 0.0, 1.0, 1, 1, -norm.x, -norm.y, 0,
+            hwidth, -hheight, 0,       1.0, 0.0, 0.0, 1.0, 0, 1, norm.x, -norm.y, 0,
             hwidth, hheight, 0,        1.0, 1.0, 0.0, 1.0, 0, 0, norm.x, norm.y, 0,
         
             hwidth, hheight, 0,        1.0, 1.0, 0.5, 1.0, 1, 0, norm.x, norm.y, 0,// back face
-            hwidth, -hheight, 0,       1.0, 0.0, 1.0, 1.0, 1, 1, norm.x, norm.y, 0,
-            -hwidth, -hheight, 0,      0.0, 1.0, 1.0, 1.0, 0, 1, norm.x, norm.y, 0,
-            -hwidth, hheight, 0,       0.5, 0.5, 1.0, 1.0, 0, 0, norm.x, norm.y, 0
+            hwidth, -hheight, 0,       1.0, 0.0, 1.0, 1.0, 1, 1, norm.x, -norm.y, 0,
+            -hwidth, -hheight, 0,      0.0, 1.0, 1.0, 1.0, 0, 1, -norm.x, -norm.y, 0,
+            -hwidth, hheight, 0,       0.5, 0.5, 1.0, 1.0, 0, 0, -norm.x, norm.y, 0
         ];
 
         let indis = [

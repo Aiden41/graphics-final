@@ -353,8 +353,6 @@ inner3_door.data = Mesh.wall(gl,shader_program,3,5,door_mat);
 inner3_door.position = new Vec4(-25,-1,-1.5);
 inner3_door.yaw = 0.25;
 
-
-
 let loading_mesh = null;
 let java = scene.add_child();
 java.pitch = 0.25;
@@ -381,7 +379,7 @@ loadTheMesh('/src/models/checkmark.obj', 1, green, function(){
 });
 
 let check2 = scene.add_child();
-check2.position = new Vec4(0,-0.5,2.5);
+check2.position = new Vec4(0,-0.5,2);
 check2.scale = new Vec4(0,0,0);
 loadTheMesh('/src/models/checkmark.obj', 1, green, function(){
     check2.data = loading_mesh;
@@ -651,7 +649,6 @@ function update() {
         }
     }
     
-
     check2.yaw += 0.005;
     check3.yaw += 0.005;
     check4.yaw += 0.005;
@@ -677,6 +674,11 @@ async function take_and_send_screenshot(){
     if(prediction === "L" && gamestate === 0){
         scene.del_child(inner1_door);
         check2.scale = new Vec4(0.5,0.5,0.5);
+        let check_light1 = check3.add_child();
+        check_light1.data = new Light([0,0,0],[0,1,0],1);
+
+        let check_light2 = check4.add_child();
+        check_light2.data = new Light([0,0,0],[0,1,0],1);
         gamestate++;
     }
     else if((prediction === "3" || prediction === "J") && gamestate === 1){
@@ -724,8 +726,6 @@ async function take_and_send_screenshot(){
         }
     }
     
-    
-
     console.log(prediction);
     openCanvasHidden();
     return prediction;
