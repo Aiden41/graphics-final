@@ -61,12 +61,6 @@ let fragment_source =
     uniform float mat_specular;
     uniform float mat_shininess;
 
-    //uniform vec3 sun_dir;
-    //uniform vec3 sun_color;
-
-    //uniform vec3 point_pos;
-    //uniform vec3 point_color;
-
     uniform vec3 camera_pos;
     uniform vec4 light_positions[50];
     uniform vec3 light_colors[50];
@@ -109,7 +103,7 @@ let fragment_source =
                 vec3 point_color = light_colors[i];
                 vec4 point_diffuse_color = vec4( diff_color( normal_tx, point_tx, point_color, mat_diffuse ), 1.0 );
                 vec4 point_specular_color = vec4( spec_color( normal_tx, camera_dir, point_tx, point_color, mat_specular, mat_shininess ), 1.0);
-                float attenuation = 1.0/(0.6*distance);
+                float attenuation = 1.0/(0.5*distance);
                 vec4 color_from_light = (point_diffuse_color + point_specular_color)*attenuation;
                 f_color = f_color + color_from_light;
             }
@@ -246,7 +240,7 @@ sun.scale = new Vec4(6,6,6);
 sun.position = new Vec4(-10,-5,25);
 
 let sun_light = sun.add_child();
-sun_light.data = new Light([-10,-5,25],[5,0,0],1);
+sun_light.data = new Light([-10,-5,25],[2,0,0],1);
 
 let sun_reverse = scene.add_child();
 sun_reverse.data = make_uv_sphere(gl,shader_program,15,sun_mat);
@@ -699,10 +693,10 @@ async function take_and_send_screenshot(){
         scene.del_child(inner1_door);
         check2.scale = new Vec4(0.5,0.5,0.5);
         let check_light1 = check3.add_child();
-        check_light1.data = new Light([0,0,0],[0,0.17,0],0);
+        check_light1.data = new Light([0,0,0],[0,0.23,0],0);
 
         let check_light2 = check4.add_child();
-        check_light2.data = new Light([0,0,0],[0,0.17,0],0);
+        check_light2.data = new Light([0,0,0],[0,0.23,0],0);
         gamestate++;
     }
     else if((prediction === "3" || prediction === "J") && gamestate === 1){
