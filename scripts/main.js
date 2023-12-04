@@ -722,9 +722,6 @@ async function take_and_send_screenshot(){
             let pointL5 = light_spin2.add_child();
             pointL5.data = new Light([0,0,0],[0,2,0],1);
         }
-        else if(prediction === "Y"){
-
-        }
     }
     
     
