@@ -86,7 +86,6 @@ class Mesh {
                 verts.push( v_bl.x, v_bl.y, v_bl.z,     1,0,0,1, 0,0, normal_t2.x, normal_t2.y, normal_t2.z );
                 verts.push( v_tr.x, v_tr.y, v_tr.z,     1,0,0,1, 1,1, normal_t2.x, normal_t2.y, normal_t2.z );
 
-
                 indis.push(
                     indi_start,
                     indi_start + 1,
@@ -115,15 +114,17 @@ class Mesh {
         let norm = new Vec4(hwidth,hheight,0,0).norm();
 
         let verts = [
+
             -hwidth, hheight, 0,       0.0, 0.0, 1.0, 1.0, 1, 0, -norm.x, norm.y, 0, // front face
             -hwidth, -hheight, 0,      0.0, 1.0, 0.0, 1.0, 1, 1, -norm.x, -norm.y, 0,
             hwidth, -hheight, 0,       1.0, 0.0, 0.0, 1.0, 0, 1, norm.x, -norm.y, 0,
             hwidth, hheight, 0,        1.0, 1.0, 0.0, 1.0, 0, 0, norm.x, norm.y, 0,
+            
+            hwidth, hheight, 0,        1.0, 1.0, 0.5, 1.0, 1, 0, -norm.x, -norm.y, 0,// back face
+            hwidth, -hheight, 0,       1.0, 0.0, 1.0, 1.0, 1, 1, -norm.x, norm.y, 0,
+            -hwidth, -hheight, 0,      0.0, 1.0, 1.0, 1.0, 0, 1, norm.x, norm.y, 0,
+            -hwidth, hheight, 0,       0.5, 0.5, 1.0, 1.0, 0, 0, norm.x, -norm.y, 0,
         
-            hwidth, hheight, 0,        1.0, 1.0, 0.5, 1.0, 1, 0, norm.x, norm.y, 0,// back face
-            hwidth, -hheight, 0,       1.0, 0.0, 1.0, 1.0, 1, 1, norm.x, -norm.y, 0,
-            -hwidth, -hheight, 0,      0.0, 1.0, 1.0, 1.0, 0, 1, -norm.x, -norm.y, 0,
-            -hwidth, hheight, 0,       0.5, 0.5, 1.0, 1.0, 0, 0, -norm.x, norm.y, 0
         ];
 
         let indis = [
