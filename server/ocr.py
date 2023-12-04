@@ -7,7 +7,6 @@ from sklearn.base import TransformerMixin, BaseEstimator
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import GridSearchCV
 from sklearn.svm import SVC
-from sklearn.decomposition import PCA
 from sklearn.metrics import f1_score
 from PIL import Image, ImageOps
 import pickle as pkl

@@ -1,6 +1,5 @@
-*.png
+ml/
 *.csv
 *.pkl
 __pycache__
 *.pyc
-*.jpg

@@ -11,6 +11,11 @@ gl.enable( gl.DEPTH_TEST );
 gl.enable( gl.CULL_FACE );
 gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
 
+const ctx = canvas2.getContext('2d');
+const drawing = document.getElementById('innerContainer');
+let coord = {x:0 , y:0};  
+let draw = false; 
+
 let vertex_source =
     `#version 300 es
     precision mediump float;
@@ -157,9 +162,6 @@ let java_top_mat = new Material(0.55, 1.0, 2.0, 4.0, java_top_texture);
 
 let grantDoor_off_tex = loadTexture('src/textures/grantDoor_off.jpg');
 let grantDoor_off = new Material(0.55, 1.0, 2.0, 4.0, grantDoor_off_tex);
-
-let space_background_texture = loadTexture('src/textures/Space_Background.jpg');
-let space_background = new Material(0.55, 1.0, 2.0, 4.0, space_background_texture);
 
 let green_tex = loadTexture('src/textures/green.jpg');
 let green = new Material(0.55, 1.0, 2.0, 4.0, green_tex);
@@ -566,6 +568,8 @@ function make_uv_sphere( gl, program, subdivs, material) {
     return new Mesh(gl, program, verts, indis, material);
 };
 
+let check_flag = false;
+
 function update() {
     let basis_x = view.basis_x();
     let basis_y = 0;//view.basis_y();
@@ -630,7 +634,27 @@ function update() {
     sun_slow.pitch = -Math.sin(sunSpin/2)/18;
     planet1.yaw += 0.015;
     
+    if(check_flag == false)
+    {
+        check2.position = check2.position.add(new Vec4(0, 0.003, 0));
+        if(check2.position.y >= 0.15)
+        {
+            check_flag = true;
+        }
+    }
+    if(check_flag == true)
+    {
+        check2.position = check2.position.add(new Vec4(0, -0.003, 0));
+        if(check2.position.y <= 0)
+        {
+            check_flag = false;
+        }
+    }
+    
+
     check2.yaw += 0.005;
+    check3.yaw += 0.005;
+    check4.yaw += 0.005;
     java.yaw += 0.005;
     light_box2.yaw -= 0.005;
     light_sphere1.yaw += 0.005;
@@ -710,9 +734,6 @@ async function take_and_send_screenshot(){
     return prediction;
 };
 
-const ctx = canvas2.getContext('2d');
-const drawing = document.getElementById('innerContainer');
-
 window.addEventListener('load', ()=>{ 
     ctx.rect(0, 0, 1280, 720);
     ctx.fillStyle = "white";
@@ -754,10 +775,6 @@ function myClear(){
     ctx.fillStyle = "white";
     ctx.fill();
 };
-    
-let coord = {x:0 , y:0};  
-   
-let draw = false; 
 
 function startDrawing(event){ 
     draw = true; 
