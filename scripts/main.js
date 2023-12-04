@@ -679,7 +679,7 @@ async function take_and_send_screenshot(){
         check2.scale = new Vec4(0.5,0.5,0.5);
         gamestate++;
     }
-    else if(prediction === "3" && gamestate === 1){
+    else if((prediction === "3" || prediction === "J") && gamestate === 1){
         scene.del_child(inner2_door);
         gamestate++;
     }
