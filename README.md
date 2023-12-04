@@ -9,10 +9,10 @@ Download the dataset from https://www.kaggle.com/datasets/dhruvildave/english-ha
 Extract the contents of the zip into ml.
 The folder structure should look like this:
 
-> server/
-    >> ml/
-        >>> Img/
-        >>> english.csv
+- server/
+    - ml/
+        - Img/
+        - english.csv
 
 You should now be able to run ocr.py. Upon completion, ocr.py will save the model to a file called ocr svm.pkl inside of the ml folder.
 
