@@ -163,6 +163,9 @@ let java_top_mat = new Material(0.55, 1.0, 2.0, 4.0, java_top_texture);
 let grantDoor_off_tex = loadTexture('src/textures/grantDoor_off.jpg');
 let grantDoor_off = new Material(0.55, 1.0, 2.0, 4.0, grantDoor_off_tex);
 
+let grantDoor_on_tex = loadTexture('src/textures/grantDoor_on.jpg');
+let grantDoor_on = new Material(0.55, 1.0, 2.0, 4.0, grantDoor_on_tex);
+
 let green_tex = loadTexture('src/textures/green.jpg');
 let green = new Material(0.55, 1.0, 2.0, 4.0, green_tex);
 
@@ -289,7 +292,7 @@ function addWall(name, w_width, w_height, w_material, positionOfWall,wroll=0,wpi
     name.pitch = wpitch;
     name.yaw = wyaw;
 }
-let wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14, wall15, wall16;
+let wall1, wall2, wall3, wall4, wall5, wall6, wall7, wall8, wall9, wall10, wall11, wall12, wall13, wall14, wall15, wall16, wall17;
 let fence_post1,fence_post2,fence_post3,fence_post4,fence_post5,fence_post6,fence_post7, fence_rail;
 let inner1_wall,inner1_door,inner2_wall,inner2_door,inner3_wall,inner3_door;
 //front
@@ -306,7 +309,16 @@ addWall(wall11,8,1,question_1,[0,1,-4.99]);
 addWall(wall12,10,7,cream_wall,[-20,0,-5]);
 addWall(wall16,8,1,question_3,[-20,1,-4.99]);
 //left
-addWall(wall5,10,7,grantDoor_off,[-35,0,0],0,0,0.25);
+wall5 = scene.add_child();
+wall5.data = Mesh.wall(gl,shader_program,10,7,grantDoor_off);
+wall5.position = new Vec4(-35,0,0);
+wall5.yaw = 0.25;
+
+wall17 = scene.add_child();
+wall17.data = Mesh.wall(gl,shader_program,10,7,grantDoor_on);
+wall17.position = new Vec4(-35,0,0);
+wall17.scale = new Vec4(0,0,0);
+wall17.yaw = 0.25;
 //right
 addWall(wall6,10,7,cream_wall,[5,0,0],0,0,0.25);
 //bottom
@@ -688,6 +700,12 @@ async function take_and_send_screenshot(){
         gamestate++;
     }
     else if(gamestate === 2){
+        if(prediction === "0" || prediction === "O"){
+            heightmap_datamap[1][1] = 0;
+            heightmap_datamap[1][2] = 0;
+            heightmap_datamap[2][1] = 0;
+            heightmap_datamap[2][2] = 0;
+        }
         if(prediction === "1" || prediction === "I" || prediction === "L"){
             heightmap_datamap[1][1] ^= 1;
             heightmap_datamap[1][2] ^= 1;
@@ -717,6 +735,8 @@ async function take_and_send_screenshot(){
         if(prediction === "N"){
             light_spin3.del_child(pointL3);
             scene.del_child(java);
+            scene.del_child(wall5);
+            wall17.scale = new Vec4(1,1,1);
             
             check1.scale = new Vec4(0.5,0.5,0.5);
 
