@@ -585,10 +585,11 @@ function make_uv_sphere( gl, program, subdivs, material) {
 };
 
 let check_flag = false;
+let up_flag = 0;
 
 function update() {
     let basis_x = view.basis_x();
-    let basis_y = 0;//view.basis_y();
+    let basis_y = view.basis_y();
     let basis_z = view.basis_z();
     if(keys.is_key_down('ArrowUp'))
     {
@@ -606,6 +607,14 @@ function update() {
     {
         yaw += rotation_speed;
     }
+    if(keys.is_key_down('KeyR'))
+    {
+        roll = 0;
+    }
+    if(keys.is_key_down('KeyY') && keys.is_key_down('ControlLeft'))
+    {
+        up_flag ^= 1;
+    }
     if(keys.is_key_down('KeyW'))
     {
         movement_vec = movement_vec.add(basis_z.scaled(movement));
@@ -621,6 +630,14 @@ function update() {
     if(keys.is_key_down('KeyD'))
     {
         movement_vec = movement_vec.add(basis_x.scaled(movement));
+    }
+    if(keys.is_key_down('Space'))
+    {
+        movement_vec = movement_vec.add(basis_y.scaled(movement));
+    }
+    if(keys.is_key_down('KeyC'))
+    {
+        movement_vec = movement_vec.add(basis_y.scaled(-movement));
     }
     if(keys.is_key_down('KeyQ'))
     {
@@ -658,7 +675,7 @@ function update() {
             check_flag = true;
         }
     }
-    if(check_flag == true)
+    if(check_flag == 1)
     {
         check2.position = check2.position.add(new Vec4(0, -0.003, 0));
         if(check2.position.y <= 0)
@@ -675,7 +692,12 @@ function update() {
     light_sphere1.yaw += 0.005;
     light_sphere2.yaw += 0.005;
 
-    view = Mat4.translation(movement_vec.x, 0, movement_vec.z).mul(Mat4.rotation_xz(yaw).mul(Mat4.rotation_yz(pitch).mul(Mat4.rotation_xy(roll))));
+    if(up_flag == 0)
+    {
+        movement_vec.y = 0;
+    }
+
+    view = Mat4.translation(movement_vec.x, movement_vec.y, movement_vec.z).mul(Mat4.rotation_xz(yaw).mul(Mat4.rotation_yz(pitch).mul(Mat4.rotation_xy(roll))));
     set_uniform_vec3_array(gl, shader_program, 'camera_pos', [movement_vec.x, movement_vec.y, movement_vec.z]);
 };
 
@@ -726,6 +748,12 @@ async function take_and_send_screenshot(){
         if(prediction === "4" || prediction === "H"){
             heightmap_datamap[1][1] ^= 1;
             heightmap_datamap[1][2] ^= 1;
+        }
+        if(prediction === "8"){
+            heightmap_datamap[1][1] = 1;
+            heightmap_datamap[1][2] = 1;
+            heightmap_datamap[2][1] = 1;
+            heightmap_datamap[2][2] = 1;
         }
 
         heightmap1.data = Mesh.height_map(gl,shader_program,heightmap_datamap,brick_wall);
